@@ -1,0 +1,11 @@
+/ChatClient1.class
+/ClientCommand.class
+/NotConnectedClientCommand.class
+/login.class
+/quit.class
+/logoff.class
+/sethost.class
+/gethost.class
+/getport.class
+/setport.class
+/setpost.class
