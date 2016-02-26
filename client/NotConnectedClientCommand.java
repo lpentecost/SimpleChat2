@@ -30,7 +30,7 @@ public abstract class NotConnectedClientCommand extends ClientCommand
     }
     else
     {
-      getClient().clientUI().display("Currently connected to " + getClient().getHost() + ".\n Cannot  execute command.");
+      getClient().clientUI().display("Currently connected to " + getClient().getHost() + ". Cannot  execute command.");
     }
   }
 

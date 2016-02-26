@@ -1,5 +1,6 @@
 package server;
 
+import common.ChatIF;
 import server.EchoServer1;
 
 /**
@@ -17,11 +18,23 @@ public abstract class ServerCommand
 {
   private String myString;
   private EchoServer1 myServer;
+  private ChatIF serverUI;
 
   public ServerCommand(String str, EchoServer1 server)
   {
     myString = str;
     myServer = server;
+    serverUI = server.serverUI();
+  }
+  
+  
+  /**
+   * This method provides the command access to the server's user interface
+   *
+   * @return the server chat interface
+   */
+  protected ChatIF serverUI(){
+	  return serverUI;
   }
 
   /**

@@ -10,15 +10,20 @@ public class setport extends NotConnectedServerCommand{
 	
 	@Override
 	public void doCmd() {
-		String host = getStr();
 		
-		if (host != ""){
-			getServer().setPort(host);
-			System.out.println("Port set to " + host);
-		} else {
-			System.out.println("Port number cannot be empty. Host not set");
+		int port = 0;
+		try{
+			port = Integer.valueOf(getStr());
+		} catch (NumberFormatException e){
+			System.out.println("Port must be a number!");
 		}
 		
+		if (port < 100 || port > 9999){
+			System.out.println("Port not set. Port must be between 100 and 9999");
+			return;
+		}
+		
+		getServer().setPort(port);
+		System.out.println("Port set to " + port);
 	}
-
 }

@@ -2,6 +2,7 @@ package common;
 
 import ocsf.server.*;
 import java.io.*;
+import server.*;
 
 /**
  *  This abstract class specifies requests that can be sent from a client to
@@ -16,7 +17,7 @@ import java.io.*;
 
 public abstract class ServerMessageHandler implements Serializable
 {
-  private AbstractServer myServer;
+  private EchoServer1 myServer;
   private ConnectionToClient myClient;
 
   /**
@@ -24,7 +25,7 @@ public abstract class ServerMessageHandler implements Serializable
    *
    * @param server Should be the server receiving this command
    */
-  public void setServer(AbstractServer server)
+  public void setServer(EchoServer1 server)
   {
     myServer = server;
   }
@@ -44,7 +45,7 @@ public abstract class ServerMessageHandler implements Serializable
    *
    * @return the server
    */
-  protected AbstractServer getServer()
+  protected EchoServer1 getServer()
   {
     return myServer;
   }

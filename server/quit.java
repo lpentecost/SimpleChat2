@@ -11,9 +11,9 @@ public class quit extends ServerCommand
 
   public void doCommand(){
     try{
+      serverUI().display("Server shut down");
+      getServer().sendToAllClients("The server shut down");
       getServer().close();
-      System.out.println("Server Shut Down");
-      getServer().sendToAllClients("Server Shut Down");
       System.exit(0);
     }
     catch(IOException ex)

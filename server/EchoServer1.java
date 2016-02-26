@@ -1,9 +1,5 @@
 package server;
 
-import java.io.*;
-
-import client.ChatClient1;
-import client.ClientCommand;
 import ocsf.server.*;
 import common.*;
 
@@ -29,6 +25,8 @@ public class EchoServer1 extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  
+  public static ChatIF serverUI;
 
   //Constructors ****************************************************
 
@@ -44,6 +42,10 @@ public class EchoServer1 extends AbstractServer
 
   //Instance methods ************************************************
 
+  public void setServerUI(ChatIF ui){
+	  EchoServer1.serverUI = ui;
+  }
+  
   public void handleMessageFromServerConsole(String message){
 	if(message.charAt(0) != '#'){
 	  sendToAllClients("SERVER MSG> " + message);
@@ -51,6 +53,88 @@ public class EchoServer1 extends AbstractServer
 	  message = message.substring(1); // eliminates first character
 	  createAndDoCommand(message);
 	}
+  }
+  
+
+  /**
+   * This method handles any messages received from the client.
+   *
+   * @param msg The message received, an instance of a subclass of ServerMessageHandler
+   * @param client The connection from which the message originated.
+   */
+  public void handleMessageFromClient(Object msg, ConnectionToClient client){
+    ServerMessageHandler handler = (ServerMessageHandler) msg;
+    handler.setServer(this);
+    handler.setConnectionToClient(client);
+    handler.handleMessage();
+  }
+
+  /**
+   * Sets the port
+   */
+  public void setPort(String p) {
+	setPort(Integer.valueOf(p));
+  }
+  
+  
+  /**
+   * This references the serverUI that's hooked up
+   */
+  public ChatIF serverUI(){
+    return serverUI;
+  }
+  
+  /**
+   * Override method of clientConnected in AbstractServer
+   * Called each time a new client is connected
+   * @param client the connection connected to the client.
+   */
+  @Override
+  protected void clientConnected(ConnectionToClient client){
+	  // This must be getting called before ServerLoginHandler.handleMessage()
+	  //serverUI().display("clientConnected in EchoServer1 called");
+	  //serverUI().display(client.getInfo("id") + " has connected");
+  }
+  
+  /**
+   * Hook method called each time a client disconnects.
+   * The default implementation does nothing. The method
+   * may be overridden by subclasses but should remains synchronized.
+   *
+   * @param client the connection with the client.
+   */
+  @Override
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+	  serverUI().display(client.getInfo("id") + " has disconnected");
+  }
+  
+  /**
+   * Hook method called each time an exception is thrown in a
+   * ConnectionToClient thread.
+   * @param client the client that raised the exception.
+   * @param Throwable the exception thrown.
+   *
+   */
+  @Override
+  synchronized protected void clientException(ConnectionToClient client, Throwable exception) {
+	  serverUI().display(client.getName() + " raised a " + exception.getClass()+ " exception");
+  }
+
+  
+  /**
+   * This method overrides the one in the superclass.  Called
+   * when the server starts listening for connections.
+   */
+  protected void serverStarted(){
+	  serverUI.display("Server listening for connections on port " + getPort());
+  }
+
+  /**
+   * This method overrides the one in the superclass.  Called
+   * when the server stops listening for connections.
+   */
+  protected void serverStopped(){
+      serverUI.display("Server has stopped listening for connections.");
   }
   
   private void createAndDoCommand(String message){
@@ -75,79 +159,11 @@ public class EchoServer1 extends AbstractServer
 	  }
 	  catch(Exception ex)
 	  {
-		System.out.println("Not a command");
+		serverUI.display("Not a command");
 	  }
   }
 
-
-  /**
-   * This method handles any messages received from the client.
-   *
-   * @param msg The message received, an instance of a subclass of ServerMessageHandler
-   * @param client The connection from which the message originated.
-   */
-  public void handleMessageFromClient(Object msg, ConnectionToClient client)
-  {
-    ServerMessageHandler handler = (ServerMessageHandler) msg;
-    handler.setServer(this);
-    handler.setConnectionToClient(client);
-    handler.handleMessage();
-  }
-
-  /**
-   * This method overrides the one in the superclass.  Called
-   * when the server starts listening for connections.
-   */
-  protected void serverStarted()
-  {
-    System.out.println("Server listening for connections on port " + getPort());
-  }
-
-  /**
-   * This method overrides the one in the superclass.  Called
-   * when the server stops listening for connections.
-   */
-  protected void serverStopped()
-  {
-    System.out.println("Server has stopped listening for connections.");
-  }
-
   //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555
-   *          if no argument is entered.
-   */
-  public static void main(String[] args){
-    int port = 0; //Port to listen on
 
-    try{
-      port = Integer.parseInt(args[0]); //Get port from command line
-    } catch (Throwable t) {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-
-    EchoServer1 sv = new EchoServer1(port);
-
-    try {
-	  sv.listen(); //Start listening for connections
-	} catch (Exception ex) {
-	  System.out.println("ERROR - Could not listen for clients!");
-	}
-    
-    // Creates a new server console
-    try {
-      new ServerConsole(sv, port).accept();
-    } catch (Exception e) {
-      System.out.println("Something happened");
-    }
-  }
-
-  public void setPort(String p) {
-	setPort(Integer.valueOf(p));
-  }
 }
 

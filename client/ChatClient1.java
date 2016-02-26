@@ -192,10 +192,5 @@ public class ChatClient1 extends AbstractClient
     System.exit(0); // completely ends the client, does not allow him to come back
   }
 
-  public void logoff() throws IOException{
-    try{
-    	closeConnection(); // kills everything about the connection!
-    } catch(IOException e) {}
-  }
 }
 //End of ChatClient class

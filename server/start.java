@@ -2,22 +2,24 @@ package server;
 
 import java.io.IOException;
 
-public class start extends NotConnectedServerCommand{
+public class start extends ServerCommand{
 
 	public start(String str, EchoServer1 server) {
 		super(str, server);
 	}
 
 	@Override
-	public void doCmd() {
-		if (getServer().isListening()){
-			System.out.println("The server is already running");
-		} else {
-			try {
-				getServer().listen();
-			} catch (IOException e) {
-				System.out.println("Server couldn't start.");
-			}
+	public void doCommand() {
+		
+		if(getServer().isListening()){
+			serverUI().display("The server is already running");
+			return;
+		}
+		
+		try {
+			getServer().listen();
+		} catch (IOException e) {
+			serverUI().display("Server could not listen");
 		}
 	}
 }

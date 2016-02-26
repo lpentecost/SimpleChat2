@@ -29,6 +29,5 @@ public class login extends NotConnectedClientCommand
       getClient().clientUI().display("Connection to " + getClient().getHost() + " failed.");
     }
   }
-
 }
 

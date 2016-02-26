@@ -26,7 +26,8 @@ public class ServerLoginHandler extends ServerMessageHandler
    */
   public void handleMessage()
   {
-    System.out.println(myId + " has logged on");
+	//getServer().serverUI().display("handleMessage in ServerLoginHandler called");
+	getServer().serverUI().display(myId + " has logged on");
     getClient().setInfo("id", myId);
     getServer().sendToAllClients("SERVER MSG> " + myId + " has joined");
   }

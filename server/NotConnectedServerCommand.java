@@ -24,7 +24,7 @@ public abstract class NotConnectedServerCommand extends ServerCommand
 
   public void doCommand()
   {
-    if(!getServer().isListening())
+    if(!getServer().isListening() && getServer().getNumberOfClients() == 0)
     {
       doCmd();
     }

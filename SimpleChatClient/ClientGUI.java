@@ -126,20 +126,32 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
 
     public static void main(String[] args) {
         final String host;
-        int port = 0;  //The port number
         String idIn = "";
+        int port = DEFAULT_PORT;
         final String id;
 
         host = "localhost";
         try
         {
-          idIn = args[0];
+            idIn = args[0];
         }
         catch(ArrayIndexOutOfBoundsException e)
         {
-          System.out.println("No id provided, can't login.");
-          System.exit(-1);
+            System.out.println("No id provided, can't login.");
+            System.exit(-1);
         }
+        
+        try{
+        	port = Integer.parseInt(args[1]);
+        } catch(ArrayIndexOutOfBoundsException e){
+        	System.out.println("Default port used.");
+        	port = DEFAULT_PORT;
+        } catch(NumberFormatException e){
+        	System.out.println("Port not a number, exiting");
+    		System.exit(-1);
+        }
+        
+        final int port_final = port;
         
         id = idIn;
         
@@ -147,7 +159,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI(host, DEFAULT_PORT, id);
+                createAndShowGUI(host, port_final, id);
             }
        });
     }

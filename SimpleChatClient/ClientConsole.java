@@ -26,6 +26,7 @@ public class ClientConsole implements ChatIF
   /**
    * The default port to connect on.
    */
+	
   final public static int DEFAULT_PORT = 5555;
 
   //Instance variables **********************************************
@@ -91,32 +92,42 @@ public class ClientConsole implements ChatIF
   /**
    * This method is responsible for the creation of the Client UI.
    *
-   * @param args[0] The host to connect to.
+   * @param args[0] The login ID
+   * @param args[1] The port to connect to. Must be a number.
+   * @param args[2] The host to connect to.
    */
   public static void main(String[] args) {
+	
+	// name, port, host
+	  
 	String host = "";
 	String id = "";
 	int port = 0;
 	
-	try{
-		port = Integer.valueOf(args[0]);
-	}catch(NumberFormatException e){
-		port = DEFAULT_PORT;
-	}
-	
-    try {
+	try {
       id = args[0];
     } catch(ArrayIndexOutOfBoundsException e) {
       System.out.println("No id provided, can't login.");
       System.exit(-1);
     }
-    System.out.println("Loggging in as " + id);
-    
-    try {
-      host = args[1];
-    } catch(ArrayIndexOutOfBoundsException e) {
-      host = "localhost";
-    }    
+	
+	try{
+		port = Integer.parseInt(args[1]);
+	}catch(NumberFormatException e){
+		System.out.println("Port not a number, exiting");
+		System.exit(-1);
+	}catch(ArrayIndexOutOfBoundsException e){
+		System.out.println("Default port used.");
+		port = DEFAULT_PORT;
+	}
+	
+	try{
+		host = args[2];
+	}catch(ArrayIndexOutOfBoundsException e){
+		host = "localhost";
+	}
+	
+    System.out.println("Loggging in as " + id); 
     ClientConsole chat = new ClientConsole(host, port, id);
     chat.accept();  //Wait for console data
   }

@@ -21,7 +21,7 @@ public class ServerStringMessageHandler extends ServerNonLoginHandler
    */
   public void handleMess()
   {
-    System.out.println((String)getClient().getInfo("id") + "> " + myString);
+	getServer().serverUI().display((String)getClient().getInfo("id") + "> " + myString);
     getServer().sendToAllClients((String)getClient().getInfo("id") + "> " + myString);
   }
 

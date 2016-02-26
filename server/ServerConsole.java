@@ -18,6 +18,8 @@ public class ServerConsole implements ChatIF{
 	
 	private EchoServer1 server;
 	
+	private static ChatIF serverUI;
+	
 	private int port;
 	
 	public ServerConsole(EchoServer1 sv, int p){
@@ -32,7 +34,7 @@ public class ServerConsole implements ChatIF{
 	
 	public void accept(){
 	  try {
-		System.out.println("Server chat client, standing by\n");
+		System.out.println("Server chat client, standing by");
 	    BufferedReader fromConsole = new BufferedReader(new InputStreamReader(System.in));
 	    String message;
 	
@@ -45,33 +47,33 @@ public class ServerConsole implements ChatIF{
 	  }
 	}
 	
-//	public static void main(String[] args) {
-//		String host = "";
-//		String id = "";
-//		int port = 0;
-//		
-//		try{
-//			port = Integer.valueOf(args[0]);
-//		}catch(NumberFormatException e){
-//			port = DEFAULT_PORT;
-//		}
-//		
-//	    try {
-//	      id = args[0];
-//	    } catch(ArrayIndexOutOfBoundsException e) {
-//	      System.out.println("No id provided, can't login.");
-//	      System.exit(-1);
-//	    }
-//	    System.out.println("Loggging in as " + id);
-//	    
-//	    try {
-//	      host = args[1];
-//	    } catch(ArrayIndexOutOfBoundsException e) {
-//	      host = "localhost";
-//	    }
-//	    
-//	    ServerConsole chat = new ServerConsole(server, port);
-//	    chat.accept();
-//	}
-	
+	public static void main(String[] args){
+		// When a ServerConsole is created, create an EchoServer!
+		
+	    int port; //Port to listen on
+	    
+	    try{
+	      port = Integer.parseInt(args[0]); //Get port from command line
+	    } catch (Throwable t) {
+	      port = DEFAULT_PORT; //Set port to 5555
+	    }
+	    
+	    EchoServer1 sv = new EchoServer1(port);
+	    serverUI = new ServerConsole(sv, port);
+	    sv.setServerUI(serverUI);
+	    
+	    try {
+		    sv.listen(); //Start listening for connections
+		} catch (Exception ex) {
+		    serverUI.display("ERROR - Could not listen for clients!");
+		}
+	    
+	    // Creates a new server console
+	    try {
+	        ((ServerConsole)serverUI).accept();
+	    } catch (Exception e) {
+	    	serverUI.display("Something happened");
+	    }
+	    
+	}
 }

@@ -8,7 +8,10 @@ public class stop extends ServerCommand
   }
 
   public void doCommand(){
-	System.out.println("Server stopped listening for clients.");
-    getServer().stopListening();
+	  if(!getServer().isListening()){
+		  serverUI().display("Server is already stopped, and not listening.");
+		  return;
+	  }
+      getServer().stopListening();
   }
 }

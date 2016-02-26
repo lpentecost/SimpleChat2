@@ -11,8 +11,8 @@ public class close extends ServerCommand
 
   public void doCommand(){
     try{
-      getServer().close();
       getServer().sendToAllClients("Server Closed");
+      getServer().close();
     }
     catch(IOException ex)
     {
