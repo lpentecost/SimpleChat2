@@ -1,6 +1,10 @@
 package server;
 
 import ocsf.server.*;
+
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Set;
 import common.*;
 
 /**
@@ -27,6 +31,10 @@ public class EchoServer1 extends AbstractServer
   final public static int DEFAULT_PORT = 5555;
   
   public static ChatIF serverUI;
+  
+  private HashSet<String> usernames;
+  private Hashtable<String, String> usernamePasswords;
+  private Hashtable<String, Boolean> loggedIn;
 
   //Constructors ****************************************************
 
@@ -38,10 +46,38 @@ public class EchoServer1 extends AbstractServer
   public EchoServer1(int port)
   {
     super(port);
+    usernames = new HashSet<String>();
+    usernamePasswords = new Hashtable<String, String>();
+    loggedIn = new Hashtable<String, Boolean>();
   }
 
   //Instance methods ************************************************
 
+  public boolean usernameExists(String username){
+	  return usernames.contains(username);
+  }
+  
+  public void addUsernameWithPassword(String username, String password){
+	  usernames.add(username);
+	  usernamePasswords.put(username, password);
+  }
+  
+  public boolean passwordMatchesUsername(String username, String password){
+	  return usernamePasswords.get(username).equals(password);
+  }
+  
+  public boolean userLoggedIn(String username){
+	  return loggedIn.get(username) && usernames.contains(username);
+  }
+  
+  public void setUsernameLoggedIn(String username){
+	  loggedIn.put(username, true);
+  }
+  
+  public void setUsernameLoggedOut(String username){
+	  loggedIn.put(username, false);
+  }
+  
   public void setServerUI(ChatIF ui){
 	  EchoServer1.serverUI = ui;
   }

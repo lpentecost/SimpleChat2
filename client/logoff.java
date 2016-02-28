@@ -2,6 +2,8 @@ package client;
 
 import java.io.IOException;
 
+import common.ServerLogoffHandler;
+
 /**
  *  Implements client command to log off, but not quit
  *
@@ -19,8 +21,9 @@ public class logoff extends ClientCommand{
 	public void doCommand() {
 		try{
 			if(getClient().isConnected()){
-				getClient().closeConnection();
+			    getClient().sendToServer(new ServerLogoffHandler(getClient().getId()));
 				getClient().clientUI().display("Logged off from the server.");
+				getClient().closeConnection();
 			} else {
 				getClient().clientUI().display("You are already logged off.");
 			}

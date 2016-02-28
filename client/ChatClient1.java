@@ -8,6 +8,8 @@ import ocsf.client.*;
 import common.*;
 import java.io.*;
 
+import SimpleChatClient.ClientConsole;
+
 /**
  * This class overrides some of the methods defined in the abstract
  * superclass in order to give more functionality to the client.
@@ -32,6 +34,7 @@ public class ChatClient1 extends AbstractClient
   private ChatIF myClientUI;
 
   String myId;
+  private String password;
 
   //Constructors ****************************************************
 
@@ -43,26 +46,20 @@ public class ChatClient1 extends AbstractClient
    * @param clientUI The interface type variable.
    */
 
-  public ChatClient1(String host, int port, ChatIF clientUI, String id)
-    throws IOException
-  {
+  public ChatClient1(String host, int port, ChatIF clientUI, String id, String pass) throws IOException {
+	  
     super(host, port); //Call the superclass constructor
     myClientUI = clientUI;
     myId = id;
-    try
-    {
-      openConnection();
-      sendToServer(new ServerLoginHandler(id));
-    }
-      catch(IOException e)
-      {
-        clientUI.display("Could not open connection and/or send message to server.  Terminating client.");
-        quit();
-      }
-
+    password = pass;
+    
+    openConnection();
+          
+    ServerLoginHandler s = new ServerLoginHandler(id, password);      
+    sendToServer(s);
   }
 
-  public ChatIF clientUI()
+public ChatIF clientUI()
   {
     return myClientUI;
   }
@@ -71,7 +68,10 @@ public class ChatClient1 extends AbstractClient
   {
     return myId;
   }
-
+  
+  public String getPassword(){
+	  return password;
+  }
 
   //Instance methods ************************************************
 
@@ -82,6 +82,7 @@ public class ChatClient1 extends AbstractClient
    */
   public void handleMessageFromServer(Object msg)
   {
+	// message string gets prepended with "SERVER MSG>"
     clientUI().display(msg.toString());
   }
 
@@ -140,14 +141,14 @@ public class ChatClient1 extends AbstractClient
   private void createAndDoCommand(String message)
   {
     String commandStr;
+    
     int indexBlank = message.indexOf(' '); // returns -1 if no space, otherwise index
-    if(indexBlank == -1) // no space
-    {
+    if(indexBlank == -1) { // no space
       commandStr = "client." + message;
       message = "";
-    }
-    else
-    {
+      
+    } else {
+      // The arguments to the command
       commandStr = "client." + message.substring(0, indexBlank);
       message = message.substring(indexBlank+1);
     }
@@ -168,8 +169,8 @@ public class ChatClient1 extends AbstractClient
     }
   }
 
-  public void connectionException(Exception ex)
-  {
+  // Exclusively called by AbstractClient.run()
+  public void connectionException(Exception ex){
     clientUI().display("Connection exception " + ex + "\nServer shut down. Terminating this client");
     System.exit(0);
   }

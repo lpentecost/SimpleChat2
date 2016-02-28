@@ -5,6 +5,7 @@ package SimpleChatClient;
 // license found at www.lloseng.com
 
 import java.io.*;
+import java.util.Scanner;
 
 import common.*;
 import client.*;
@@ -39,15 +40,15 @@ public class ClientConsole implements ChatIF
   //Constructors ****************************************************
 
   /**
-   * Constructs an instance of the ClientConsole UI.
+   * Constructs an instance of the ClientConsole UI...by creating a ChatClient...
    *
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port, String id)
+  public ClientConsole(String host, int port, String id, String password)
   {
     try{
-      client = new ChatClient1(host, port, this, id);
+      client = new ChatClient1(host, port, this, id, password);
     } catch(IOException exception) {
       System.out.println("Error: Can't setup connection!" + " Terminating client.");
       System.exit(1);
@@ -71,8 +72,7 @@ public class ClientConsole implements ChatIF
         client.handleMessageFromClientUI(message);
       }
     } catch (Exception ex) {
-      System.out.println
-        ("Unexpected error while reading from console!");
+      System.out.println("Unexpected error while reading from console!");
     }
   }
 
@@ -93,43 +93,27 @@ public class ClientConsole implements ChatIF
    * This method is responsible for the creation of the Client UI.
    *
    * @param args[0] The login ID
-   * @param args[1] The port to connect to. Must be a number.
-   * @param args[2] The host to connect to.
+   * @param args[1] Password
+   * @param args[2] The port to connect to. Must be a number.
+   * @param args[3] The host to connect to.
    */
   public static void main(String[] args) {
-	
-	// name, port, host
+	// id, password, port, host
 	  
-	String host = "";
 	String id = "";
+	String password = "";
 	int port = 0;
-	
-	try {
-      id = args[0];
-    } catch(ArrayIndexOutOfBoundsException e) {
-      System.out.println("No id provided, can't login.");
-      System.exit(-1);
-    }
-	
-	try{
-		port = Integer.parseInt(args[1]);
-	}catch(NumberFormatException e){
-		System.out.println("Port not a number, exiting");
-		System.exit(-1);
-	}catch(ArrayIndexOutOfBoundsException e){
-		System.out.println("Default port used.");
-		port = DEFAULT_PORT;
-	}
-	
-	try{
-		host = args[2];
-	}catch(ArrayIndexOutOfBoundsException e){
-		host = "localhost";
-	}
-	
-    System.out.println("Loggging in as " + id); 
-    ClientConsole chat = new ClientConsole(host, port, id);
-    chat.accept();  //Wait for console data
+	String host = "";
+		
+	Scanner sc = new Scanner(System.in);
+    id = sc.nextLine();
+    password = sc.nextLine();
+    
+    host = "localhost";
+    port = 5555;
+
+    ClientConsole chat = new ClientConsole(host, port, id, password);
+    chat.accept();
   }
 }
 //End of ConsoleChat class

@@ -13,6 +13,7 @@ public class login extends NotConnectedClientCommand
 {
   public login(String str, ChatClient1 client)
   {
+	// apparently str is the message
     super(str, client);
   }
 
@@ -20,9 +21,18 @@ public class login extends NotConnectedClientCommand
   {
     try
     {
+    	    	
+      // This connection will be terminated if there's a login error
       getClient().openConnection();
-      getClient().clientUI().display("Connection to " + getClient().getHost() + " opened.");
-      getClient().sendToServer(new ServerLoginHandler(getClient().getId()));
+      
+      // Not necessarily true
+      //getClient().clientUI().display("Connection to " + getClient().getHost() + " opened.");
+      
+      String[] params = getStr().split(" ");
+
+      ServerLoginHandler s = new ServerLoginHandler(params[0], params[1]);
+      getClient().sendToServer(s);
+      
     }
     catch(IOException ex)
     {
