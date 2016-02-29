@@ -46,7 +46,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 		if (server.passwordMatchesUsername(myId, password) && !server.userLoggedIn(myId)){
 			// Successful login
 			server.setUsernameLoggedIn(myId);
-			//server.serverUI().display(myId + " has logged in");
+			server.serverUI().display(myId + " has logged in");
 			connectionToClient.setInfo("id", myId);
 			server.sendToAllClients("SERVER MSG> " + myId + " has joined");
 						
@@ -85,7 +85,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 	} else {	
 		server.addUsernameWithPassword(myId, password);
 		server.setUsernameLoggedIn(myId);
-		//server.serverUI().display(myId + " has been created and logged in");
+		server.serverUI().display(myId + " has been created and logged in");
 		connectionToClient.setInfo("id", myId);	
 		server.sendToAllClients("SERVER MSG> " + myId + " has joined");
 	}
