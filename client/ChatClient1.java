@@ -93,14 +93,22 @@ public class ChatClient1 extends AbstractClient
 	  if (msg instanceof ArrayList) { // handling the case where want to add to the blockedMe list
 		  getBlockedMeList().addAll((ArrayList) msg);
 	  }
-	  else {
-	  //finding the indicies of the substring in which there will be there will be the client's name
-	  final int BEGINNINGIDIDX = 0;
-	  int endingIdIdx = ((String) msg).indexOf(">"); //finding the second carrot
-	  clientName = ((String) msg).substring(BEGINNINGIDIDX, endingIdIdx);
-	  // the message will not show if the client has been blocked
-	  if (!(getBlockedList().contains(clientName)))
-	     clientUI().display(msg.toString());
+	  else {		  
+		  //finding the indicies of the substring in which there will be there will be the client's name
+		  final int BEGINNINGIDIDX = 0;
+		  		  
+		  int endingIdIdx = ((String) msg).indexOf(">"); //finding the second carrot
+		  
+		  if (endingIdIdx == -1){
+			  endingIdIdx = msg.toString().length() - 1;
+		  }
+		  
+		  clientName = ((String) msg).substring(BEGINNINGIDIDX, endingIdIdx);
+		  		  
+		  // the message will not show if the client has been blocked
+		  if (!(getBlockedList().contains(clientName))){
+			  clientUI().display(msg.toString()); 
+		  }
 	  }
   }
   

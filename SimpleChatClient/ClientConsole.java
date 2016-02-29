@@ -104,7 +104,7 @@ public class ClientConsole implements ChatIF
 	String password = "";
 	int port = 0;
 	String host = "";
-		
+
 	Scanner sc = new Scanner(System.in);
     id = sc.nextLine();
     password = sc.nextLine();

@@ -35,6 +35,7 @@ public class EchoServer1 extends AbstractServer
   private Hashtable<String, String> usernamePasswords;
   private Hashtable<String, Boolean> loggedIn;
   private HashSet<Channel> channels;
+  private Hashtable<String, String> usernameChannels; 
 
   //Constructors ****************************************************
 
@@ -50,10 +51,75 @@ public class EchoServer1 extends AbstractServer
     usernamePasswords = new Hashtable<String, String>();
     loggedIn = new Hashtable<String, Boolean>();
     channels = new HashSet<Channel>();
+    usernameChannels = new Hashtable<String, String>();
   }
 
   //Instance methods ************************************************
   
+  public void sendToAllClients(Object msg)
+  {	 
+	if (msg.toString().contains(">")){
+		
+		// if the user is in a channel
+		String username = msg.toString().substring(0, msg.toString().indexOf(">"));
+		
+		if (usernameChannels.keySet().contains(username)){						
+			Channel c = getChannelByName(usernameChannels.get(username));
+			
+			// Sort of desperate sending the server along...
+			c.sendToMembers(msg, this);
+			
+			// return early and don't send to everyone
+			return;
+		}
+	}
+	  
+    Thread[] clientThreadList = getClientConnections();
+
+    for (int i=0; i<clientThreadList.length; i++)
+    {
+      try
+      {
+        ((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
+      }
+      catch (Exception ex) {}
+    }
+  }
+  
+  
+  public void addUserToChannel(String username, String channel){
+	  
+	  System.out.println("called addUserToChannel with username, channel: " + username + ", " + channel);
+	  
+	  if (channelExists(channel)){
+		  Channel c = getChannelByName(channel);
+		  usernameChannels.put(username, channel);
+		  c.addUser(username);	
+	  } else {
+		  // Don't know what to do here...It will silently fail I guess
+	  }
+  }
+  
+  /**
+   * @param channelName
+   * @returns a channel, or null
+   */
+  public Channel getChannelByName(String channelName) {
+	  for (Channel c : channels) {
+		  if (c.name.equals(channelName)){
+			  return c;
+		  }
+	  }
+	  return null;
+  }
+  
+  public Hashtable<String, String> getUsernameChannels(){
+	  return usernameChannels;
+  }
+  
+  public boolean channelExists(String channelName){
+	  return channels.contains(getChannelByName(channelName));
+  }
   
   public void createChannel(String channelName) {
 	Channel c = new Channel(channelName);
@@ -203,8 +269,6 @@ public class EchoServer1 extends AbstractServer
 		serverUI.display("Not a command");
 	  }
   }
-
-
 
   //Class methods ***************************************************
 
