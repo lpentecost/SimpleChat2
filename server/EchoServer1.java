@@ -1,7 +1,6 @@
 package server;
 
 import ocsf.server.*;
-
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
@@ -35,6 +34,7 @@ public class EchoServer1 extends AbstractServer
   private HashSet<String> usernames;
   private Hashtable<String, String> usernamePasswords;
   private Hashtable<String, Boolean> loggedIn;
+  private HashSet<Channel> channels;
 
   //Constructors ****************************************************
 
@@ -49,10 +49,17 @@ public class EchoServer1 extends AbstractServer
     usernames = new HashSet<String>();
     usernamePasswords = new Hashtable<String, String>();
     loggedIn = new Hashtable<String, Boolean>();
+    channels = new HashSet<Channel>();
   }
 
   //Instance methods ************************************************
-
+  
+  
+  public void createChannel(String channelName) {
+	Channel c = new Channel(channelName);
+	channels.add(c);
+  }
+  
   public boolean usernameExists(String username){
 	  return usernames.contains(username);
   }
@@ -91,7 +98,6 @@ public class EchoServer1 extends AbstractServer
 	}
   }
   
-
   /**
    * This method handles any messages received from the client.
    *
@@ -197,6 +203,8 @@ public class EchoServer1 extends AbstractServer
 		serverUI.display("Not a command");
 	  }
   }
+
+
 
   //Class methods ***************************************************
 

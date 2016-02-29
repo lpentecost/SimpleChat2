@@ -7,6 +7,7 @@ package client;
 import ocsf.client.*;
 import common.*;
 import java.io.*;
+import java.util.ArrayList;
 
 import SimpleChatClient.ClientConsole;
 
@@ -32,6 +33,10 @@ public class ChatClient1 extends AbstractClient
    * the display method in the client.
    */
   private ChatIF myClientUI;
+	  
+  protected ArrayList<String> blocked;
+	  
+  protected ArrayList<String> blockedMe;
 
   String myId;
   private String password;
@@ -52,6 +57,8 @@ public class ChatClient1 extends AbstractClient
     myClientUI = clientUI;
     myId = id;
     password = pass;
+    blocked = new ArrayList<String>();
+    blockedMe = new ArrayList<String>();
     
     openConnection();
           
@@ -59,7 +66,7 @@ public class ChatClient1 extends AbstractClient
     sendToServer(s);
   }
 
-public ChatIF clientUI()
+  public ChatIF clientUI()
   {
     return myClientUI;
   }
@@ -82,8 +89,35 @@ public ChatIF clientUI()
    */
   public void handleMessageFromServer(Object msg)
   {
-	// message string gets prepended with "SERVER MSG>"
-    clientUI().display(msg.toString());
+	  String clientName;
+	  if (msg instanceof ArrayList) { // handling the case where want to add to the blockedMe list
+		  getBlockedMeList().addAll((ArrayList) msg);
+	  }
+	  else {
+	  //finding the indicies of the substring in which there will be there will be the client's name
+	  final int BEGINNINGIDIDX = 0;
+	  int endingIdIdx = ((String) msg).indexOf(">"); //finding the second carrot
+	  clientName = ((String) msg).substring(BEGINNINGIDIDX, endingIdIdx);
+	  // the message will not show if the client has been blocked
+	  if (!(getBlockedList().contains(clientName)))
+	     clientUI().display(msg.toString());
+	  }
+  }
+  
+  public void blockedMe(String clientId) {
+	  blockedMe.add(clientId);
+  }
+  
+  public ArrayList<String> getBlockedMeList() {
+	  return blockedMe;
+  }
+  
+  public void block(String clientId){
+	  blocked.add(clientId);
+  }
+  
+  public ArrayList<String> getBlockedList() {
+	  return blocked;
   }
 
   /**
