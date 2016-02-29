@@ -128,8 +128,7 @@ public class EchoServer1 extends AbstractServer
   @Override
   protected void clientConnected(ConnectionToClient client){
 	  // This must be getting called before ServerLoginHandler.handleMessage()
-	  //serverUI().display("clientConnected in EchoServer1 called");
-	  //serverUI().display(client.getInfo("id") + " has connected");
+	  serverUI().display(client.getInfo("id") + " has connected");
   }
   
   /**
