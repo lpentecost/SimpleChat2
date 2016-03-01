@@ -1,6 +1,8 @@
 package server;
 
 import ocsf.server.*;
+
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
@@ -32,10 +34,10 @@ public class EchoServer1 extends AbstractServer
   public static ChatIF serverUI;
   
   private HashSet<String> usernames;
-  private Hashtable<String, String> usernamePasswords;
-  private Hashtable<String, Boolean> loggedIn;
+  private HashMap<String, String> usernamePasswords;
+  private HashMap<String, Boolean> loggedIn;
   private HashSet<Channel> channels;
-  private Hashtable<String, String> usernameChannels; 
+  private HashMap<String, String> usernameChannels; 
 
   //Constructors ****************************************************
 
@@ -48,10 +50,10 @@ public class EchoServer1 extends AbstractServer
   {
     super(port);
     usernames = new HashSet<String>();
-    usernamePasswords = new Hashtable<String, String>();
-    loggedIn = new Hashtable<String, Boolean>();
+    usernamePasswords = new HashMap<String, String>();
+    loggedIn = new HashMap<String, Boolean>();
     channels = new HashSet<Channel>();
-    usernameChannels = new Hashtable<String, String>();
+    usernameChannels = new HashMap<String, String>();
   }
 
   //Instance methods ************************************************
@@ -113,7 +115,7 @@ public class EchoServer1 extends AbstractServer
 	  return null;
   }
   
-  public Hashtable<String, String> getUsernameChannels(){
+  public HashMap<String, String> getUsernameChannels(){
 	  return usernameChannels;
   }
   

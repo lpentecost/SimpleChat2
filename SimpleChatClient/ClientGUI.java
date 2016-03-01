@@ -81,7 +81,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
         
         try
         {
-          client= new ChatClient1(host, port, this, id);
+          client = new ChatClient1(host, port, this);
         }
         catch(IOException exception)
         {

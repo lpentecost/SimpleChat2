@@ -48,12 +48,16 @@ public class ServerLoginHandler extends ServerMessageHandler
 			server.setUsernameLoggedIn(myId);
 			server.serverUI().display(myId + " has logged in");
 			connectionToClient.setInfo("id", myId);
-			server.sendToAllClients("SERVER MSG> " + myId + " has joined");
 						
+			server.sendToAllClients("SERVER MSG> " + myId + " has joined");
+
 			// does NOT close the connection
 			
 		// Password matches, but the user is logged in. Bad case
 		} else if (server.passwordMatchesUsername(myId, password) && server.userLoggedIn(myId)){
+			
+			
+			System.out.println(server.userLoggedIn(myId));
 			
 			server.serverUI().display("Someone attempted to log in as " + myId + " while " + myId + " was logged in.");
 			try { connectionToClient.sendToClient("This account is in use."); } catch (IOException e) {}

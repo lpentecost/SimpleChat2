@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 
 import common.ServerLogoffHandler;
+import ocsf.server.ConnectionToClient;
 
 /**
  *  Implements client command to log off, but not quit
@@ -19,9 +20,13 @@ public class logoff extends ClientCommand{
 
 	@Override
 	public void doCommand() {
+		
+		// need to get the connectiontoclient
+		
+		
 		try{
 			if(getClient().isConnected()){
-			    getClient().sendToServer(new ServerLogoffHandler(getClient().getId()));
+			    getClient().sendToServer(new ServerLogoffHandler());
 				getClient().clientUI().display("Logged off from the server.");
 				getClient().closeConnection();
 			} else {

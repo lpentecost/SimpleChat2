@@ -45,10 +45,10 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port, String id, String password)
+  public ClientConsole(String host, int port)
   {
     try{
-      client = new ChatClient1(host, port, this, id, password);
+      client = new ChatClient1(host, port, this);
     } catch(IOException exception) {
       System.out.println("Error: Can't setup connection!" + " Terminating client.");
       System.exit(1);
@@ -98,21 +98,11 @@ public class ClientConsole implements ChatIF
    * @param args[3] The host to connect to.
    */
   public static void main(String[] args) {
-	// id, password, port, host
-	  
-	String id = "";
-	String password = "";
-	int port = 0;
-	String host = "";
-
-	Scanner sc = new Scanner(System.in);
-    id = sc.nextLine();
-    password = sc.nextLine();
     
-    host = "localhost";
-    port = 5555;
+    String host = "localhost";
+    int port = 5555;
 
-    ClientConsole chat = new ClientConsole(host, port, id, password);
+    ClientConsole chat = new ClientConsole(host, port);
     chat.accept();
   }
 }

@@ -6,14 +6,14 @@ public class ServerLogoffHandler extends ServerMessageHandler{
 
 	private String myId;
 	
-	public ServerLogoffHandler(String str){
-		myId = str;
-	}
+	public ServerLogoffHandler(){}
 	
 	@Override
 	public void handleMessage() {
-		EchoServer1 server = getServer();
-		server.setUsernameLoggedOut(myId);
-		server.serverUI().display(myId + " logged out.");
+		
+		EchoServer1 server = getServer();		
+		server.serverUI().display(getClient().getInfo("id") + " logged out."); // This isn't getting printed
+		server.setUsernameLoggedOut(getClient().getInfo("id").toString());
+		
 	}
 }

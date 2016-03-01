@@ -51,19 +51,23 @@ public class ChatClient1 extends AbstractClient
    * @param clientUI The interface type variable.
    */
 
-  public ChatClient1(String host, int port, ChatIF clientUI, String id, String pass) throws IOException {
+  public ChatClient1(String host, int port, ChatIF clientUI) throws IOException {
 	  
     super(host, port); //Call the superclass constructor
     myClientUI = clientUI;
-    myId = id;
-    password = pass;
+    //myId = id;
+    //password = pass;
     blocked = new ArrayList<String>();
     blockedMe = new ArrayList<String>();
     
-    openConnection();
-          
-    ServerLoginHandler s = new ServerLoginHandler(id, password);      
-    sendToServer(s);
+    //openConnection();
+      
+    clientUI().display("Use '#setport <portNumber>' and '#sethost <hostname>' to set them");
+    clientUI().display("Defaults are port 5555 and localhost");
+    clientUI().display("Then type '#login <username> <password>' to login");
+    
+    //ServerLoginHandler s = new ServerLoginHandler(id, password);      
+    //sendToServer(s);
   }
 
   public ChatIF clientUI()
