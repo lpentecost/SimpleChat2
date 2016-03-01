@@ -40,13 +40,14 @@ import java.io.IOException;
 import javax.swing.*;
 
 import common.ChatIF;
+import server.Channel;
 import client.ChatClient1;
 
 public class ClientGUI extends JPanel implements ActionListener, ChatIF {
     protected JTextField textField;
     protected JTextArea textArea;
     private final static String newline = "\n";
-    
+        
     /**
      * The default port to connect on.
      */
@@ -57,7 +58,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
      */
     ChatClient1 client;
 
-    public ClientGUI(String host, int port, String id) {
+    public ClientGUI(String host, int port) {
         super(new GridBagLayout());
 
         textField = new JTextField(20);
@@ -89,7 +90,6 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
                     + " Terminating client.");
           System.exit(1);
         }
-        display("connected to " + host + "-" + port);
     }
 
     public void actionPerformed(ActionEvent evt) {
@@ -111,13 +111,13 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
      * this method should be invoked from the
      * event dispatch thread.
      */
-    private static void createAndShowGUI(String host, int port, String id) {
+    private static void createAndShowGUI(String host, int port) {
         //Create and set up the window.
         JFrame frame = new JFrame("Chat");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add contents to the window.
-        frame.add(new ClientGUI(host, port, id));
+        frame.add(new ClientGUI(host, port));
 
         //Display the window.
         frame.pack();
@@ -125,41 +125,15 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
     }
 
     public static void main(String[] args) {
-        final String host;
-        String idIn = "";
-        int port = DEFAULT_PORT;
-        final String id;
-
-        host = "localhost";
-        try
-        {
-            idIn = args[0];
-        }
-        catch(ArrayIndexOutOfBoundsException e)
-        {
-            System.out.println("No id provided, can't login.");
-            System.exit(-1);
-        }
-        
-        try{
-        	port = Integer.parseInt(args[1]);
-        } catch(ArrayIndexOutOfBoundsException e){
-        	System.out.println("Default port used.");
-        	port = DEFAULT_PORT;
-        } catch(NumberFormatException e){
-        	System.out.println("Port not a number, exiting");
-    		System.exit(-1);
-        }
-        
+    	String host = "localhost";
+        int port = 5555;        
         final int port_final = port;
-        
-        id = idIn;
-        
+                
     	//Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI(host, port_final, id);
+                createAndShowGUI(host, port_final);
             }
        });
     }
