@@ -43,9 +43,9 @@ public class ServerLoginHandler extends ServerMessageHandler
 		
 	if (usernameExists){
 		
-		if (server.passwordMatchesUsername(myId, password) && !server.userLoggedIn(myId)){
+		if (server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
 			// Successful login
-			server.setUsernameLoggedIn(myId);
+			//server.setUsernameLoggedIn(myId);
 			server.serverUI().display(myId + " has logged in");
 			connectionToClient.setInfo("id", myId);
 						
@@ -54,11 +54,8 @@ public class ServerLoginHandler extends ServerMessageHandler
 			// does NOT close the connection
 			
 		// Password matches, but the user is logged in. Bad case
-		} else if (server.passwordMatchesUsername(myId, password) && server.userLoggedIn(myId)){
-			
-			
-			System.out.println(server.userLoggedIn(myId));
-			
+		} else if (server.passwordMatchesUsername(myId, password) /*&& server.userLoggedIn(myId)*/){
+						
 			server.serverUI().display("Someone attempted to log in as " + myId + " while " + myId + " was logged in.");
 			try { connectionToClient.sendToClient("This account is in use."); } catch (IOException e) {}
 			
@@ -68,7 +65,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 
 			
 		// Classic wrong password error
-		} else if (!server.passwordMatchesUsername(myId, password) && !server.userLoggedIn(myId)){
+		} else if (!server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
 			try { connectionToClient.sendToClient("Incorrect password"); } catch (IOException e) {}
 			
 			try {
@@ -76,7 +73,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 			} catch (IOException e) {}
 			
 		// Wrong password. Someone else is logged in as this name. Potential break in attempt
-		} else if (!server.passwordMatchesUsername(myId, password) && server.userLoggedIn(myId)){
+		} else if (!server.passwordMatchesUsername(myId, password) /*&& server.userLoggedIn(myId)*/){
 			
 			try { connectionToClient.sendToClient("Incorrect password"); } catch (IOException e) {}
 			
@@ -88,7 +85,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 		// First user to claim this username
 	} else {	
 		server.addUsernameWithPassword(myId, password);
-		server.setUsernameLoggedIn(myId);
+		//server.setUsernameLoggedIn(myId);
 		server.serverUI().display(myId + " has been created and logged in");
 		connectionToClient.setInfo("id", myId);	
 		server.sendToAllClients("SERVER MSG> " + myId + " has joined");

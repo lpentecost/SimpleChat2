@@ -7,6 +7,8 @@ import ocsf.server.ConnectionToClient;
 
 public class Channel {
 
+	public static final String DEFAULT_CHANNEL = "SomeEncryptedString";
+	
 	String name;
 	HashSet<String> usernames;
 	
@@ -42,4 +44,5 @@ public class Channel {
 			} catch (IOException e) {}
 		}		
 	}
+	
 }

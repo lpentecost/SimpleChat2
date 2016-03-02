@@ -35,7 +35,7 @@ public class EchoServer1 extends AbstractServer
   
   private HashSet<String> usernames;
   private HashMap<String, String> usernamePasswords;
-  private HashMap<String, Boolean> loggedIn;
+  //private HashMap<String, Boolean> loggedIn;
   private HashSet<Channel> channels;
   private HashMap<String, String> usernameChannels; 
 
@@ -51,7 +51,7 @@ public class EchoServer1 extends AbstractServer
     super(port);
     usernames = new HashSet<String>();
     usernamePasswords = new HashMap<String, String>();
-    loggedIn = new HashMap<String, Boolean>();
+    //loggedIn = new HashMap<String, Boolean>();
     channels = new HashSet<Channel>();
     usernameChannels = new HashMap<String, String>();
   }
@@ -141,18 +141,18 @@ public class EchoServer1 extends AbstractServer
 	  return usernamePasswords.get(username).equals(password);
   }
   
-  public boolean userLoggedIn(String username){
-	  return loggedIn.get(username) && usernames.contains(username);
-  }
+//  public boolean userLoggedIn(String username){
+//	  return loggedIn.get(username) && usernames.contains(username);
+//  }
+//  
+//  public void setUsernameLoggedIn(String username){
+//	  loggedIn.put(username, true);
+//  }
   
-  public void setUsernameLoggedIn(String username){
-	  loggedIn.put(username, true);
-  }
-  
-  public void setUsernameLoggedOut(String username){
-	  loggedIn.put(username, false);
-  }
-  
+//  public void setUsernameLoggedOut(String username){
+//	  loggedIn.put(username, false);
+//  }
+//  
   public void setServerUI(ChatIF ui){
 	  EchoServer1.serverUI = ui;
   }

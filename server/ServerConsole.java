@@ -58,6 +58,7 @@ public class ServerConsole implements ChatIF{
 	      port = DEFAULT_PORT; //Set port to 5555
 	    }
 	    
+	    
 	    EchoServer1 sv = new EchoServer1(port);
 	    serverUI = new ServerConsole(sv, port);
 	    sv.setServerUI(serverUI);
@@ -74,6 +75,6 @@ public class ServerConsole implements ChatIF{
 	    } catch (Exception e) {
 	    	serverUI.display("Something happened");
 	    }
-	    
 	}
+
 }

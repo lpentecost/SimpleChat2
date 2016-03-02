@@ -58,7 +58,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
      */
     ChatClient1 client;
 
-    public ClientGUI(String host, int port) {
+    public ClientGUI(String host, int port, String channel) {
         super(new GridBagLayout());
 
         textField = new JTextField(20);
@@ -82,7 +82,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
         
         try
         {
-          client = new ChatClient1(host, port, this);
+          client = new ChatClient1(host, port, this, channel);
         }
         catch(IOException exception)
         {
@@ -111,13 +111,13 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
      * this method should be invoked from the
      * event dispatch thread.
      */
-    private static void createAndShowGUI(String host, int port) {
+    private static void createAndShowGUI(String host, int port, String channel) {
         //Create and set up the window.
         JFrame frame = new JFrame("Chat");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add contents to the window.
-        frame.add(new ClientGUI(host, port));
+        frame.add(new ClientGUI(host, port, channel));
 
         //Display the window.
         frame.pack();
@@ -128,14 +128,22 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
     	String host = "localhost";
         int port = 5555;        
         final int port_final = port;
-                
+        
     	//Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI(host, port_final);
+                createAndShowGUI(host, port_final, Channel.DEFAULT_CHANNEL);
             }
-       });
+        });
+    }
+    
+    public static void createAndRun(String host, int port, String channelName){
+    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI("localhost", 5555, channelName);
+            }
+        });
     }
 }
 

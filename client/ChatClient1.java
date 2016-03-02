@@ -5,6 +5,7 @@
 package client;
 
 import ocsf.client.*;
+import server.Channel;
 import common.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class ChatClient1 extends AbstractClient
 
   String myId;
   private String password;
+  private String channelName;
 
   //Constructors ****************************************************
 
@@ -51,26 +53,28 @@ public class ChatClient1 extends AbstractClient
    * @param clientUI The interface type variable.
    */
 
-  public ChatClient1(String host, int port, ChatIF clientUI) throws IOException {
+  public ChatClient1(String host, int port, ChatIF clientUI, String channelName) throws IOException {
 	  
     super(host, port); //Call the superclass constructor
     myClientUI = clientUI;
-    //myId = id;
-    //password = pass;
+    this.channelName = channelName;
     blocked = new ArrayList<String>();
     blockedMe = new ArrayList<String>();
     
-    //openConnection();
-      
-    clientUI().display("Use '#setport <portNumber>' and '#sethost <hostname>' to set them");
-    clientUI().display("Defaults are port 5555 and localhost");
-    clientUI().display("Then type '#login <username> <password>' to login");
-    
-    //ServerLoginHandler s = new ServerLoginHandler(id, password);      
-    //sendToServer(s);
+    displayGreeting(channelName);
   }
 
-  public ChatIF clientUI()
+  private void displayGreeting(String cName) {
+	if (cName == Channel.DEFAULT_CHANNEL){
+		clientUI().display("Use '#setport <portNumber>' and '#sethost <hostname>' to set them");
+	    clientUI().display("Defaults are port 5555 and localhost");
+	    clientUI().display("Then type '#login <username> <password>' to login");
+	} else {
+		clientUI().display("This is what gets displayed when we're not in the general chat");
+	}
+  }
+
+public ChatIF clientUI()
   {
     return myClientUI;
   }
