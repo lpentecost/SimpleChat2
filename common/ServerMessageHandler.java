@@ -2,6 +2,8 @@ package common;
 
 import ocsf.server.*;
 import java.io.*;
+import java.util.HashSet;
+
 import server.*;
 
 /**
@@ -19,6 +21,7 @@ public abstract class ServerMessageHandler implements Serializable
 {
   private EchoServer1 myServer;
   private ConnectionToClient myClient;
+  private HashSet<ConnectionToClient> myClients;
 
   /**
    * Allows the server to provide access to itself
@@ -39,6 +42,9 @@ public abstract class ServerMessageHandler implements Serializable
   {
     myClient = client;
   }
+    public void addConnectionToClient(ConnectionToClient c){
+      myClients.add(c);
+    }
 
   /**
    * Allows subclasses access to the server
@@ -58,6 +64,11 @@ public abstract class ServerMessageHandler implements Serializable
   protected ConnectionToClient getClient()
   {
     return myClient;
+  }
+  
+  protected void setClient(ConnectionToClient c)
+  {
+    myClient = c;
   }
 
   /**

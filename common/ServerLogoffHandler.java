@@ -13,7 +13,7 @@ public class ServerLogoffHandler extends ServerMessageHandler{
 		
 		EchoServer1 server = getServer();		
 		server.serverUI().display(getClient().getInfo("id") + " logged out."); // This isn't getting printed
-		//server.setUsernameLoggedOut(getClient().getInfo("id").toString());
+		server.setUsernameLoggedOut(getClient().getInfo("id").toString());
 		
 	}
 }

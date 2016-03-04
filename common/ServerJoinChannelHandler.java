@@ -15,20 +15,9 @@ public class ServerJoinChannelHandler extends ServerMessageHandler{
 	public void handleMessage() {		
 		String clientUsername = getClient().getInfo("id").toString();
 		if (getServer().channelExists(channelName)){
-			getServer().addUserToChannel(clientUsername, channelName);
+			getServer().changeUserChannel(clientUsername, channelName);
 			try {
-				getClient().sendToClient("You have joined " + channelName);
-				
-				
-				// Hardcoding default host and port...
-				
-				// Going to need to get rid of uniqueness...
-				ClientGUI.createAndRun("localhost", 5555, channelName);
-				
-				getClient().sendToClient("ServerJoinChannel getClient().sendToClient test");
-				
-				// Then it needs to log you in
-				
+				getClient().sendToClient("You have joined " + channelName);				
 			} catch (IOException e) {}
 		} else {
 			try {

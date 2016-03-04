@@ -17,9 +17,17 @@ public class Channel {
 		usernames = new HashSet<String>();
 	}
 	
+	public String getName(){
+		return name;
+	}
+	
+	boolean containsUser(String username){
+		return usernames.contains(username);
+	}
+	
 	public ConnectionToClient getConnectionToClientByUsername(String username, EchoServer1 server){
 		Thread[] clientThreadList = server.getClientConnections();
-
+		
 	    for (int i=0; i<clientThreadList.length; i++)
 	    {
 	      try
@@ -35,14 +43,19 @@ public class Channel {
 	public void addUser(String username){
 		usernames.add(username);
 	}
+	
+	public void removeUser(String username){
+		usernames.remove(username);
+	}
 
 	public void sendToMembers(Object msg, EchoServer1 server) {
-		HashSet<String> recipients = usernames;
-		for (String name : recipients){
+		if (usernames.size() == 0){
+			return;
+		}
+		for (String name : usernames){
 			try {
 				getConnectionToClientByUsername(name, server).sendToClient(msg);
 			} catch (IOException e) {}
 		}		
 	}
-	
 }

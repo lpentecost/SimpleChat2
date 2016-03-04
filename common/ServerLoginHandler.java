@@ -4,8 +4,6 @@ import ocsf.server.*;
 import server.EchoServer1;
 import java.io.IOException;
 
-import SimpleChatClient.ClientConsole;
-
 /**
  *  This class handles a request from a client to login to the server.
  *
@@ -45,11 +43,13 @@ public class ServerLoginHandler extends ServerMessageHandler
 		
 		if (server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
 			// Successful login
-			//server.setUsernameLoggedIn(myId);
+			
+			server.setUsernameLoggedIn(myId);
+			connectionToClient.setInfo("id", myId);			
+			server.changeUserChannel(myId, "global");
 			server.serverUI().display(myId + " has logged in");
-			connectionToClient.setInfo("id", myId);
-						
-			server.sendToAllClients("SERVER MSG> " + myId + " has joined");
+			try { getClient().sendToClient("You have logged in as " + myId); } catch (IOException e) {}	
+			server.sendToAllClients("SERVER MSG> " + myId + " has logged in");
 
 			// does NOT close the connection
 			
@@ -82,13 +82,16 @@ public class ServerLoginHandler extends ServerMessageHandler
 			} catch (IOException e) {}
 		}
 		
-		// First user to claim this username
-	} else {	
+	// First user to claim this username
+	} else {
+		
 		server.addUsernameWithPassword(myId, password);
-		//server.setUsernameLoggedIn(myId);
-		server.serverUI().display(myId + " has been created and logged in");
+		server.setUsernameLoggedIn(myId);
 		connectionToClient.setInfo("id", myId);	
-		server.sendToAllClients("SERVER MSG> " + myId + " has joined");
+		server.changeUserChannel(myId, "global");
+		server.serverUI().display(myId + " has been created and logged in");
+		try { getClient().sendToClient("You have logged in as " + myId); } catch (IOException e) {}
+		server.sendToAllClients("SERVER MSG> " + myId + " has logged in");
 	}
   }
 }
