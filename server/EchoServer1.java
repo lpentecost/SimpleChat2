@@ -8,6 +8,12 @@ import java.util.Hashtable;
 import java.util.Set;
 import common.*;
 
+//added from Prugh's code, seems unnecessary:
+//import java.io.*;
+//import client.ChatClient1;
+//import client.ClientCommand;
+//-----
+
 /**
  *  This class modifies EchoServer to complete to begin Chat phase 2.
  *  It uses messages from Client to Server that are instances
@@ -39,6 +45,10 @@ public class EchoServer1 extends AbstractServer
   private HashSet<Channel> channels;
   private HashMap<String, String> usernameChannels;
   private Channel globalChannel;
+  
+  //added:
+  //private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
+  //----
 
   //Constructors ****************************************************
 
@@ -56,6 +66,9 @@ public class EchoServer1 extends AbstractServer
     channels = new HashSet<Channel>();
     usernameChannels = new HashMap<String, String>();
     createGlobalChannel();
+    
+    
+    //clients = new ArrayList<ConnectionToClient>();//unsure if needed still
   }
 
   private void createGlobalChannel() {
