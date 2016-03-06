@@ -34,12 +34,15 @@ public class ChatClient1 extends AbstractClient
    * the display method in the client.
    */
   private ChatIF myClientUI;
+  String myId;
 	  
   protected ArrayList<String> blocked;
 	  
   protected ArrayList<String> blockedMe;
+  
+  protected ArrayList<String> monitor;
 
-  String myId;
+  
   private String password;
   private String channelName;
 
@@ -60,6 +63,22 @@ public class ChatClient1 extends AbstractClient
     this.channelName = channelName;
     blocked = new ArrayList<String>();
     blockedMe = new ArrayList<String>();
+    monitor = new ArrayList<String>();
+    
+    /* This comes from Prugh's code, not sure what its doing.
+    	try
+    	{
+		 openConnection();
+		  sendToServer(new ServerLoginHandler(id));
+    	}
+      catch(IOException e)
+      {
+        clientUI.display("Could not open connection and/or send message to server.  Terminating client.");
+        quit();
+      }
+    
+    
+    */
     
     displayGreeting(channelName);
   }
@@ -117,7 +136,25 @@ public ChatIF clientUI()
 		  if (!(getBlockedList().contains(clientName))){
 			  clientUI().display(msg.toString()); 
 		  }
+		  
+		  
 	  }
+	  
+	  //added:
+	  if (getMonitor().size() > 0) {
+		  for (int i = 0; i < this.getMonitor().size(); i ++) {
+		     ServerForwardMessageHandler forwardMess = new ServerForwardMessageHandler("MONITOR: " + getId() + " received this message: " + (String) msg, this.getMonitor().get(i));
+		     try
+		     {
+		      sendToServer(forwardMess);
+		     }
+		     catch(IOException e)
+		     {
+		      clientUI().display("Monitor did not work.");
+		      quit();
+		     }
+		    }
+	   }//-----
   }
   
   public void blockedMe(String clientId) {
@@ -135,6 +172,15 @@ public ChatIF clientUI()
   public ArrayList<String> getBlockedList() {
 	  return blocked;
   }
+  
+  //added:
+  public void setMonitor(String clientId) {
+   monitor.add(clientId);
+  }
+  
+  public ArrayList<String> getMonitor() {
+   return monitor;
+  }//--------
 
   /**
    * This method handles all data coming from the UI
@@ -242,6 +288,16 @@ public ChatIF clientUI()
     catch(IOException e) {}
     System.exit(0); // completely ends the client, does not allow him to come back
   }
+  
+  /*prugh had this additional method, unsure if necessary yet
+  public void logoff() throws IOException{
+    try{
+     closeConnection(); // kills everything about the connection!
+    } catch(IOException e) {}
+  }
+  
+  
+  */
 
 }
 //End of ChatClient class
