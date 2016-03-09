@@ -20,15 +20,12 @@ public class logoff extends ClientCommand{
 
 	@Override
 	public void doCommand() {
-		
-		// need to get the connectiontoclient
-		
-		
+				
 		try{
 			if(getClient().isConnected()){
-			    getClient().sendToServer(new ServerLogoffHandler());
+			    getClient().sendToServer("#logoff " + getStr());
 				getClient().clientUI().display("Logged off from the server.");
-				getClient().closeConnection();
+				//getClient().closeConnection();
 			} else {
 				getClient().clientUI().display("You are already logged off.");
 			}

@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import ocsf.server.*;
 // This class helps with the #whoblockme command
 
-public class ServerBlockingMessageHandler extends ServerMessageHandler{
+public class ServerBlockHandler extends ServerMessageHandler{
 	
 	private String client1id; // client1id is blocking client2id
 	private String client2id; // client2id must add client1id to its blockedMe ArrayList
 	private ConnectionToClient connect;
 	
-	public ServerBlockingMessageHandler(String id1, String id2) {
+	public ServerBlockHandler(String id1, String id2) {
 		client1id = id1;
 		client2id = id2;
 	}

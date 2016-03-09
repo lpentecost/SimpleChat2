@@ -6,17 +6,17 @@ import ocsf.server.*;
 
 //Alex Prugh
 
-public class ServerForwardMessageHandler extends ServerMessageFindHandler {
+public class ServerForwardHandler extends ServerMessageFindHandler {
 	private String client2id;
 	private String message;
 	private ConnectionToClient connect;
 	
-	public ServerForwardMessageHandler(String id) { //no message from client forwarded
+	public ServerForwardHandler(String id) { //no message from client forwarded
 		client2id = id;
 		System.out.println(client2id);
 	}
 	
-	public ServerForwardMessageHandler(String str, String id) {
+	public ServerForwardHandler(String str, String id) {
 		message = str;
 		client2id = id;
 	}
@@ -32,5 +32,4 @@ public class ServerForwardMessageHandler extends ServerMessageFindHandler {
 			getServer().sendToAllClients("FORWARD DID NOT WORK"); //delete later
 		}
 	}
-
 }

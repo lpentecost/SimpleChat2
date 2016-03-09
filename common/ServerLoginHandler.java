@@ -29,19 +29,23 @@ public class ServerLoginHandler extends ServerMessageHandler
    * Now supports passwords
    */
   public void handleMessage(){
-	   	  
+	   	 
+	System.out.println("login message handler method called");
+	  
 	// Assume we are connected! And we'll disconnect if there's a mistake
 	// It's not particularly graceful. It makes you start another console,
 	// and it writes "null has disconnected" to the server console. 
 	
 	EchoServer1 server = getServer();
-	ConnectionToClient connectionToClient = getClient();
 	
-	boolean usernameExists = server.usernameExists(myId);
+	ConnectionToClient connectionToClient = getClient();
+		
+	boolean usernameExists = server.usernameExists(myId); // Totally baffled!
 		
 	if (usernameExists){
 		
 		if (server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
+						
 			// Successful login
 			
 			server.setUsernameLoggedIn(myId);
@@ -55,7 +59,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 			
 		// Password matches, but the user is logged in. Bad case
 		} else if (server.passwordMatchesUsername(myId, password) /*&& server.userLoggedIn(myId)*/){
-						
+									
 			server.serverUI().display("Someone attempted to log in as " + myId + " while " + myId + " was logged in.");
 			try { connectionToClient.sendToClient("This account is in use."); } catch (IOException e) {}
 			
@@ -66,6 +70,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 			
 		// Classic wrong password error
 		} else if (!server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
+			
 			try { connectionToClient.sendToClient("Incorrect password"); } catch (IOException e) {}
 			
 			try {
@@ -74,20 +79,20 @@ public class ServerLoginHandler extends ServerMessageHandler
 			
 		// Wrong password. Someone else is logged in as this name. Potential break in attempt
 		} else if (!server.passwordMatchesUsername(myId, password) /*&& server.userLoggedIn(myId)*/){
-			
+						
 			try { connectionToClient.sendToClient("Incorrect password"); } catch (IOException e) {}
 			
 			try {
 				connectionToClient.close();
 			} catch (IOException e) {}
 		}
-		
+				
 	// First user to claim this username
 	} else {
-		
+				
 		server.addUsernameWithPassword(myId, password);
 		server.setUsernameLoggedIn(myId);
-		connectionToClient.setInfo("id", myId);	
+		connectionToClient.setInfo("id", myId);
 		server.changeUserChannel(myId, "global");
 		server.serverUI().display(myId + " has been created and logged in");
 		try { getClient().sendToClient("You have logged in as " + myId); } catch (IOException e) {}

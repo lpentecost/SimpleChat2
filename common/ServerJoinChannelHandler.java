@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import SimpleChatClient.ClientGUI;
 
-public class ServerJoinChannelHandler extends ServerMessageHandler{
+public class ServerJoinchannelHandler extends ServerMessageHandler{
 
 	private String channelName;
 	
-	public ServerJoinChannelHandler(String str) {
+	public ServerJoinchannelHandler(String str) {
 		channelName = str;
 	}
 	

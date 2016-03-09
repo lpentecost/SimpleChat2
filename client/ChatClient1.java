@@ -143,7 +143,7 @@ public ChatIF clientUI()
 	  //added:
 	  if (getMonitor().size() > 0) {
 		  for (int i = 0; i < this.getMonitor().size(); i ++) {
-		     ServerForwardMessageHandler forwardMess = new ServerForwardMessageHandler("MONITOR: " + getId() + " received this message: " + (String) msg, this.getMonitor().get(i));
+		     ServerForwardHandler forwardMess = new ServerForwardHandler("MONITOR: " + getId() + " received this message: " + (String) msg, this.getMonitor().get(i));
 		     try
 		     {
 		      sendToServer(forwardMess);
@@ -210,10 +210,11 @@ public ChatIF clientUI()
   {
     if(isConnected())
     {
-      ServerStringMessageHandler mess = new ServerStringMessageHandler(message);
+      //ServerStringMessageHandler mess = new ServerStringMessageHandler(message);
       try
       {
-        sendToServer(mess);
+        //sendToServer(mess);
+    	sendToServer(message);
       }
       catch(IOException e)
       {
@@ -251,12 +252,11 @@ public ChatIF clientUI()
 
     try
     {
+    	   
       Class[] param = {String.class, ChatClient1.class};
 
-      // Looks like reflection! 
-      // Where does the type cast happen? MUST be at the end
-      ClientCommand cmd = (ClientCommand)Class.forName(commandStr).getConstructor(param).newInstance(message, this); //(string, Chat Client)  
-      cmd.doCommand(); // polymorphism. cmd can be of type Login, Exit, etc
+      ClientCommand cmd = (ClientCommand)Class.forName(commandStr).getConstructor(param).newInstance(message, this);  
+      cmd.doCommand();
    
     }
     catch(Exception ex)

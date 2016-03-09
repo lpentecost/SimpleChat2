@@ -29,7 +29,8 @@ public class block extends ClientCommand {
 		else {
 			getClient().block(blockClientId);
 			try {
-				getClient().sendToServer(new ServerBlockingMessageHandler(getClient().getId(), blockClientId));
+				//getClient().sendToServer(new ServerBlockingMessageHandler(getClient().getId(), blockClientId));
+				getClient().sendToServer("#block " + getStr());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 			}

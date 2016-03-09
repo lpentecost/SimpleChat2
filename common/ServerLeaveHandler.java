@@ -2,9 +2,9 @@ package common;
 
 import java.io.IOException;
 
-public class ServerLeaveChannelHandler extends ServerMessageHandler{
+public class ServerLeaveHandler extends ServerMessageHandler{
 	
-	public ServerLeaveChannelHandler() {}
+	public ServerLeaveHandler() {}
 	
 	public void handleMessage() {		
 		String clientUsername = getClient().getInfo("id").toString();

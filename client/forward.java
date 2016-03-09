@@ -20,7 +20,10 @@ public class forward extends ClientCommand {
 	public void doCommand() {
 		// TODO Auto-generated method stud
 		try {
-			getClient().sendToServer(new ServerForwardMessageHandler(message, toClient));
+			//getClient().sendToServer(new ServerForwardMessageHandler(message, toClient));
+			
+			getClient().sendToServer("#forward " + getStr());
+
 			getClient().clientUI().display("Message forwarded.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

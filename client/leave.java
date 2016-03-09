@@ -1,7 +1,7 @@
 package client;
 
 import java.io.IOException;
-import common.ServerLeaveChannelHandler;
+import common.ServerLeaveHandler;
 
 public class leave extends ClientCommand{
 
@@ -12,10 +12,14 @@ public class leave extends ClientCommand{
 	@Override
 	public void doCommand() {
 				
-        ServerLeaveChannelHandler s = new ServerLeaveChannelHandler();
+        //ServerLeaveHandler s = new ServerLeaveHandler();
         
-        try {
-			getClient().sendToServer(s);
+//        try {
+//			getClient().sendToServer(s);
+//		} catch (IOException e) {}
+		
+		try {
+			getClient().sendToServer("#leave " + getStr());
 		} catch (IOException e) {}
 	}
 }

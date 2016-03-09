@@ -28,10 +28,10 @@ public class login extends NotConnectedClientCommand
       // Not necessarily true
       //getClient().clientUI().display("Connection to " + getClient().getHost() + " opened.");
       
-      String[] params = getStr().split(" ");
+      //String[] params = getStr().split(" ");
 
-      ServerLoginHandler s = new ServerLoginHandler(params[0], params[1]);
-      getClient().sendToServer(s);
+      //ServerLoginHandler s = new ServerLoginHandler(params[0], params[1]);
+      getClient().sendToServer("#login " + getStr());
       
     }
     catch(IOException ex)

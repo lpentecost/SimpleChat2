@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import server.EchoServer1;
 
-public class ServerChannelHandler extends ServerMessageHandler{
+public class ServerCreatechannelHandler extends ServerMessageHandler{
 
 	private String channelName;
 	
-	public ServerChannelHandler(String str) {
+	public ServerCreatechannelHandler(String str) {
 		channelName = str;
 	}
 	

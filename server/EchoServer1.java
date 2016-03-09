@@ -2,10 +2,16 @@ package server;
 
 import ocsf.server.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
+
+import client.ChatClient1;
+import client.ClientCommand;
 import common.*;
 
 //added from Prugh's code, seems unnecessary:
@@ -39,7 +45,7 @@ public class EchoServer1 extends AbstractServer
   
   public static ChatIF serverUI;
   
-  private HashSet<String> usernames;
+  //private HashSet<String> usernames;
   private HashMap<String, String> usernamePasswords;
   private HashMap<String, Boolean> loggedIn;
   private HashSet<Channel> channels;
@@ -47,7 +53,7 @@ public class EchoServer1 extends AbstractServer
   private Channel globalChannel;
   
   //added:
-  //private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
+  private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
   //----
 
   //Constructors ****************************************************
@@ -60,7 +66,7 @@ public class EchoServer1 extends AbstractServer
   public EchoServer1(int port)
   {
     super(port);
-    usernames = new HashSet<String>();
+    //usernames = new HashSet<String>();
     usernamePasswords = new HashMap<String, String>();
     loggedIn = new HashMap<String, Boolean>();
     channels = new HashSet<Channel>();
@@ -145,6 +151,10 @@ public class EchoServer1 extends AbstractServer
 	  return null;
   }
   
+  public ArrayList<ConnectionToClient> getAllClients(){
+	  return clients;
+  }
+  
   public HashMap<String, String> getUsernameChannels(){
 	  return usernameChannels;
   }
@@ -159,11 +169,12 @@ public class EchoServer1 extends AbstractServer
   }
   
   public boolean usernameExists(String username){
-	  return usernames.contains(username);
+	  System.out.println("anything");
+	  return usernamePasswords.containsKey(username);
   }
   
   public void addUsernameWithPassword(String username, String password){
-	  usernames.add(username);
+	  //usernames.add(username);
 	  usernamePasswords.put(username, password);
   }
   
@@ -172,7 +183,8 @@ public class EchoServer1 extends AbstractServer
   }
   
   public boolean userLoggedIn(String username){
-	  return loggedIn.get(username) && usernames.contains(username);
+//	  return loggedIn.get(username) && usernames.contains(username);
+	  return loggedIn.get(username) && usernamePasswords.containsKey(username);
   }
   
   public void setUsernameLoggedIn(String username){
@@ -191,22 +203,38 @@ public class EchoServer1 extends AbstractServer
 	if(message.charAt(0) != '#'){
 	  sendToAllClients("SERVER MSG> " + message);
 	} else {
-	  message = message.substring(1); // eliminates first character
-	  createAndDoCommand(message);
+	  message = message.substring(1);
+	  createAndDoServerCommand(message);
 	}
   }
   
   /**
    * This method handles any messages received from the client.
    *
-   * @param msg The message received, an instance of a subclass of ServerMessageHandler
+   * @param msg The message received, a String. Need to differentiate between command and message
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient(Object msg, ConnectionToClient client){
-    ServerMessageHandler handler = (ServerMessageHandler) msg;
-    handler.setServer(this);
-    handler.setConnectionToClient(client);
-    handler.handleMessage();
+  public void handleMessageFromClient(Object msg, ConnectionToClient connectionToClient){
+//    ServerMessageHandler handler = (ServerMessageHandler) msg;
+//    handler.setServer(this);
+//    handler.setConnectionToClient(client);
+//    handler.handleMessage();
+	    	  
+	String message = msg.toString();
+	  
+	if(message.charAt(0) != '#'){
+
+	  String channel = (String) connectionToClient.getInfo("channel");
+	  String nameOfSender = (String) connectionToClient.getInfo("id");
+	  String outString = nameOfSender + "> " + message;
+	  
+	  sendToAllClients(outString);
+	  serverUI.display(outString);
+		
+	} else {
+	  message = message.substring(1); // eliminates first character
+	  createAndDoClientCommand(message, connectionToClient);
+	}
   }
   
   public ConnectionToClient getConnectionToClientByUsername(String username){
@@ -288,7 +316,7 @@ public class EchoServer1 extends AbstractServer
       serverUI.display("Server has stopped listening for connections.");
   }
   
-  private void createAndDoCommand(String message){
+  private void createAndDoServerCommand(String message){
 	  String commandStr;
 	  int indexBlank = message.indexOf(' '); // returns -1 if no space, otherwise index
 	  if(indexBlank == -1)
@@ -312,6 +340,55 @@ public class EchoServer1 extends AbstractServer
 	  {
 		serverUI.display("Not a command");
 	  }
+  }
+  
+  private void createAndDoClientCommand(String message, ConnectionToClient connectionToClient){
+
+	  String commandStr = "";
+	  
+	  int indexBlank = message.indexOf(' '); // returns -1 if no space, otherwise index
+	  
+	  String rawCommand = message.substring(0, indexBlank);
+	  
+	  if(indexBlank == -1) { // no space
+		  commandStr = "client." + message;
+		  message = "";	  
+	  } else {
+		  // The arguments to the command
+		  commandStr = "common.Server" + rawCommand.substring(0, 1).toUpperCase() + rawCommand.substring(1) + "Handler";
+		  message = message.substring(indexBlank+1);
+	  }
+	  
+	  System.out.println("EchoServer commandStr: " + commandStr);
+		
+	  int numParams = message.split(" ").length;
+		
+	  try{
+		  // Reflection that creates a Server___Handler object
+		  
+	      Class[] param = new Class[numParams];
+	      
+	      for (int i = 0; i < numParams; i++){
+	    	  param[i] = String.class;
+	      }
+	      
+	      String[] params = new String[numParams];	      
+	      ArrayList<String> argsArray = new ArrayList<String>(Arrays.asList(message.split(" ")));;
+	      
+	      ServerMessageHandler handler = (ServerMessageHandler)Class.forName(commandStr).getConstructor(param).newInstance(argsArray.toArray(new String[argsArray.size()])); 
+	      handler.setServer(this);
+	      handler.setConnectionToClient(connectionToClient);
+	      handler.handleMessage();
+	  }
+	  catch(Exception ex)
+	  {
+	      //clientUI().display("\nNo such command " + commandStr + "\nNo action taken.");
+		  System.out.println("Error In EchoServer");
+		  try {
+			connectionToClient.sendToClient("\nNo such command " + commandStr + "\nNo action taken.");
+		} catch (IOException e) {}
+	  }
+		  
   }
 
 

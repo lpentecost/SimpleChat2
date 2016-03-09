@@ -2,7 +2,7 @@ package client;
 
 import java.io.IOException;
 
-import common.ServerChannelHandler;
+import common.ServerCreatechannelHandler;
 
 public class createchannel extends ClientCommand{
 
@@ -12,11 +12,18 @@ public class createchannel extends ClientCommand{
 
 	@Override
 	public void doCommand() {
-		String[] params = getStr().split(" ");
-        ServerChannelHandler s = new ServerChannelHandler(params[0]);
-        
-        try {
-			getClient().sendToServer(s);
+		//String[] params = getStr().split(" ");
+//        ServerChannelHandler s = new ServerChannelHandler(params[0]);
+		
+		try {
+			//getClient().sendToServer(getStr());
+			
+			getClient().sendToServer("#createchannel " + getStr());
+			
 		} catch (IOException e) {}
+        
+//        try {
+//			getClient().sendToServer(s);
+//		} catch (IOException e) {}
 	}
 }
