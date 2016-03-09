@@ -11,13 +11,6 @@ public class leave extends ClientCommand{
 
 	@Override
 	public void doCommand() {
-				
-        //ServerLeaveHandler s = new ServerLeaveHandler();
-        
-//        try {
-//			getClient().sendToServer(s);
-//		} catch (IOException e) {}
-		
 		try {
 			getClient().sendToServer("#leave " + getStr());
 		} catch (IOException e) {}

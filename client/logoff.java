@@ -25,7 +25,7 @@ public class logoff extends ClientCommand{
 			if(getClient().isConnected()){
 			    getClient().sendToServer("#logoff " + getStr());
 				getClient().clientUI().display("Logged off from the server.");
-				//getClient().closeConnection();
+				getClient().closeConnection();
 			} else {
 				getClient().clientUI().display("You are already logged off.");
 			}

@@ -13,16 +13,9 @@ public class ServerJoinchannelHandler extends ServerMessageHandler{
 	}
 	
 	public void handleMessage() {		
-		String clientUsername = getClient().getInfo("id").toString();
-		if (getServer().channelExists(channelName)){
-			getServer().changeUserChannel(clientUsername, channelName);
-			try {
-				getClient().sendToClient("You have joined " + channelName);				
-			} catch (IOException e) {}
-		} else {
-			try {
-				getClient().sendToClient("That channel does not exist");
-			} catch (IOException e) {}
-		}
+		try {
+			getClient().setInfo("channel", channelName);
+			getClient().sendToClient("You have joined " + channelName);				
+		} catch (IOException e) {}
 	}
 }

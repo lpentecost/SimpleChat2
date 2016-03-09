@@ -26,7 +26,7 @@ public abstract class NotConnectedClientCommand extends ClientCommand
   {
     if(!getClient().isConnected())
     {
-      doCmd(); // pass the work to the subclass?
+      doCmd();
     }
     else
     {

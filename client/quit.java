@@ -37,6 +37,3 @@ public class quit extends ClientCommand
     }
   }
 }
-
-
-

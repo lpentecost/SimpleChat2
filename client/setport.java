@@ -26,9 +26,9 @@ public class setport extends NotConnectedClientCommand {
 		
 		if (port != ""){
 			getClient().setPort(Integer.valueOf(port));
-			System.out.println("Port set to " + port);
+			getClient().clientUI().display("Port set to " + port);
 		} else {
-			System.out.println("Port number cannot be empty. Port not set.");
+			getClient().clientUI().display("Port number cannot be empty. Port not set.");
 		}
 	}
 }

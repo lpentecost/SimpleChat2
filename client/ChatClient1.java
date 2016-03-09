@@ -5,7 +5,6 @@
 package client;
 
 import ocsf.client.*;
-import server.Channel;
 import common.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -39,12 +38,8 @@ public class ChatClient1 extends AbstractClient
   protected ArrayList<String> blocked;
 	  
   protected ArrayList<String> blockedMe;
-  
-  protected ArrayList<String> monitor;
-
-  
+  protected ArrayList<String> monitor;  
   private String password;
-  private String channelName;
 
   //Constructors ****************************************************
 
@@ -56,44 +51,24 @@ public class ChatClient1 extends AbstractClient
    * @param clientUI The interface type variable.
    */
 
-  public ChatClient1(String host, int port, ChatIF clientUI, String channelName) throws IOException {
+  public ChatClient1(String host, int port, ChatIF clientUI) throws IOException {
 	  
     super(host, port); //Call the superclass constructor
     myClientUI = clientUI;
-    this.channelName = channelName;
     blocked = new ArrayList<String>();
     blockedMe = new ArrayList<String>();
     monitor = new ArrayList<String>();
     
-    /* This comes from Prugh's code, not sure what its doing.
-    	try
-    	{
-		 openConnection();
-		  sendToServer(new ServerLoginHandler(id));
-    	}
-      catch(IOException e)
-      {
-        clientUI.display("Could not open connection and/or send message to server.  Terminating client.");
-        quit();
-      }
-    
-    
-    */
-    
-    displayGreeting(channelName);
+    displayGreeting();
   }
 
-  private void displayGreeting(String cName) {
-	if (cName == Channel.DEFAULT_CHANNEL){
-		clientUI().display("Use '#setport <portNumber>' and '#sethost <hostname>' to set them");
-	    clientUI().display("Defaults are port 5555 and localhost");
-	    clientUI().display("Then type '#login <username> <password>' to login");
-	} else {
-		clientUI().display("This is what gets displayed when we're not in the general chat");
-	}
+  private void displayGreeting() {	
+	clientUI().display("Use '#setport <portNumber>' and '#sethost <hostname>' to set them");
+    clientUI().display("Defaults are port 5555 and localhost");
+    clientUI().display("Then type '#login <username> <password>' to login");
   }
 
-public ChatIF clientUI()
+  public ChatIF clientUI()
   {
     return myClientUI;
   }
@@ -136,8 +111,6 @@ public ChatIF clientUI()
 		  if (!(getBlockedList().contains(clientName))){
 			  clientUI().display(msg.toString()); 
 		  }
-		  
-		  
 	  }
 	  
 	  //added:
@@ -154,7 +127,7 @@ public ChatIF clientUI()
 		      quit();
 		     }
 		    }
-	   }//-----
+	   }
   }
   
   public void blockedMe(String clientId) {
@@ -173,14 +146,13 @@ public ChatIF clientUI()
 	  return blocked;
   }
   
-  //added:
   public void setMonitor(String clientId) {
    monitor.add(clientId);
   }
   
   public ArrayList<String> getMonitor() {
    return monitor;
-  }//--------
+  }
 
   /**
    * This method handles all data coming from the UI
@@ -194,8 +166,8 @@ public ChatIF clientUI()
       sendMessageToServer(message);
     }
     else
-    { // command
-      message = message.substring(1); // eliminates first character
+    {
+      message = message.substring(1);
       createAndDoCommand(message);
     }
 
@@ -210,10 +182,8 @@ public ChatIF clientUI()
   {
     if(isConnected())
     {
-      //ServerStringMessageHandler mess = new ServerStringMessageHandler(message);
       try
       {
-        //sendToServer(mess);
     	sendToServer(message);
       }
       catch(IOException e)
@@ -239,11 +209,10 @@ public ChatIF clientUI()
   {
     String commandStr;
     
-    int indexBlank = message.indexOf(' '); // returns -1 if no space, otherwise index
-    if(indexBlank == -1) { // no space
+    int indexBlank = message.indexOf(' ');
+    if(indexBlank == -1) {
       commandStr = "client." + message;
       message = "";
-      
     } else {
       // The arguments to the command
       commandStr = "client." + message.substring(0, indexBlank);
@@ -296,8 +265,6 @@ public ChatIF clientUI()
     } catch(IOException e) {}
   }
   
-  
   */
 
 }
-//End of ChatClient class

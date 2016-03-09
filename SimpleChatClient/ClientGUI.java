@@ -40,7 +40,7 @@ import java.io.IOException;
 import javax.swing.*;
 
 import common.ChatIF;
-import server.Channel;
+//import server.Channel;
 import client.ChatClient1;
 
 public class ClientGUI extends JPanel implements ActionListener, ChatIF {
@@ -58,7 +58,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
      */
     ChatClient1 client;
 
-    public ClientGUI(String host, int port, String channel) {
+    public ClientGUI(String host, int port) {
         super(new GridBagLayout());
 
         textField = new JTextField(20);
@@ -82,7 +82,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
         
         try
         {
-          client = new ChatClient1(host, port, this, channel);
+          client = new ChatClient1(host, port, this);
         }
         catch(IOException exception)
         {
@@ -91,7 +91,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
           System.exit(1);
         }
         //added from prugh
-        display("connected to " + host + "-" + port);
+        //display("connected to " + host + "-" + port);
         //-------
     }
 
@@ -125,13 +125,13 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
      * this method should be invoked from the
      * event dispatch thread.
      */
-    private static void createAndShowGUI(String host, int port, String channel) {
+    private static void createAndShowGUI(String host, int port) {
         //Create and set up the window.
         JFrame frame = new JFrame("Chat");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Add contents to the window.
-        frame.add(new ClientGUI(host, port, channel));
+        frame.add(new ClientGUI(host, port));
 
         //Display the window.
         frame.pack();
@@ -144,34 +144,34 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
         
         
         //added
-        String idIn = "";
-        final String id;
-        try{//this part might have to work differently in general depending on how mike's channel implementation works.
-            idIn = args[0];
-        }
-        catch(ArrayIndexOutOfBoundsException e){
-            System.out.println("No id provided, can't login.");
-            System.exit(-1);
-        }
-        
-        try{
-            port = Integer.parseInt(args[1]);
-        } catch(ArrayIndexOutOfBoundsException e){
-            System.out.println("Default port used.");
-            port = DEFAULT_PORT;
-        } catch(NumberFormatException e){
-            System.out.println("Port not a number, exiting");
-            System.exit(-1);
-        }
+//        String idIn = "";
+//        final String id;
+//        try{//this part might have to work differently in general depending on how mike's channel implementation works.
+//            idIn = args[0];
+//        }
+//        catch(ArrayIndexOutOfBoundsException e){
+//            System.out.println("No id provided, can't login.");
+//            System.exit(-1);
+//        }
+//        
+//        try{
+//            port = Integer.parseInt(args[1]);
+//        } catch(ArrayIndexOutOfBoundsException e){
+//            System.out.println("Default port used.");
+//            port = DEFAULT_PORT;
+//        } catch(NumberFormatException e){
+//            System.out.println("Port not a number, exiting");
+//            System.exit(-1);
+//        }
         final int port_final = port;//moved down here for prugh's code
-        id = idIn;
+        //id = idIn;
         //------
        
     	//Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI(host, port_final, Channel.DEFAULT_CHANNEL);
+                createAndShowGUI(host, port_final);
             }
         });
     }
@@ -179,7 +179,7 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
     public static void createAndRun(String host, int port, String channelName){
     	javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI("localhost", 5555, channelName);
+                createAndShowGUI("localhost", 5555);
             }
         });
     }

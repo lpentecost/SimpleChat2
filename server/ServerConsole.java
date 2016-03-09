@@ -75,5 +75,4 @@ public class ServerConsole implements ChatIF{
 	    	serverUI.display("Something happened");
 	    }
 	}
-
 }

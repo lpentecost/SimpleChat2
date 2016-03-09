@@ -17,12 +17,13 @@ public class sethost extends NotConnectedClientCommand {
 	public void doCmd() {
 		
 		String host = getStr();
+		ChatClient1 client = getClient();
 		
 		if (host != ""){
-			getClient().setHost(host);
-			System.out.println("Host set to " + host);
+			client.setHost(host);
+			client.clientUI().display("Host set to " + host);
 		} else {
-			System.out.println("Host name cannot be empty. Host not set");
+			client.clientUI().display("Host name cannot be empty. Host not set");
 		}
 	}
 }

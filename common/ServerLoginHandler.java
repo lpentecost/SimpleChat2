@@ -37,24 +37,21 @@ public class ServerLoginHandler extends ServerMessageHandler
 	// and it writes "null has disconnected" to the server console. 
 	
 	EchoServer1 server = getServer();
-	
 	ConnectionToClient connectionToClient = getClient();
-		
 	boolean usernameExists = server.usernameExists(myId); // Totally baffled!
 		
 	if (usernameExists){
 		
-		if (server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
-						
-			// Successful login
+		// Successful login
+		if (server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){				
+			
 			
 			server.setUsernameLoggedIn(myId);
-			connectionToClient.setInfo("id", myId);			
-			server.changeUserChannel(myId, "global");
+			connectionToClient.setInfo("id", myId);				
+			connectionToClient.setInfo("channel", "global");	
 			server.serverUI().display(myId + " has logged in");
 			try { getClient().sendToClient("You have logged in as " + myId); } catch (IOException e) {}	
 			server.sendToAllClients("SERVER MSG> " + myId + " has logged in");
-
 			// does NOT close the connection
 			
 		// Password matches, but the user is logged in. Bad case
@@ -92,11 +89,13 @@ public class ServerLoginHandler extends ServerMessageHandler
 				
 		server.addUsernameWithPassword(myId, password);
 		server.setUsernameLoggedIn(myId);
-		connectionToClient.setInfo("id", myId);
-		server.changeUserChannel(myId, "global");
+		connectionToClient.setInfo("id", myId);		
+		connectionToClient.setInfo("channel", "global");
 		server.serverUI().display(myId + " has been created and logged in");
 		try { getClient().sendToClient("You have logged in as " + myId); } catch (IOException e) {}
 		server.sendToAllClients("SERVER MSG> " + myId + " has logged in");
+		
+		// does NOT close the connection
 	}
   }
 }

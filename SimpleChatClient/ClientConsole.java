@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.Scanner;
 
 import common.*;
-import server.Channel;
+//import server.Channel;
 import client.*;
 
 /**
@@ -46,10 +46,10 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port, String channelName)
+  public ClientConsole(String host, int port)
   {
     try{
-      client = new ChatClient1(host, port, this, channelName);
+      client = new ChatClient1(host, port, this);
     } catch(IOException exception) {
       System.out.println("Error: Can't setup connection!" + " Terminating client.");
       System.exit(1);
@@ -103,7 +103,7 @@ public class ClientConsole implements ChatIF
     String host = "localhost";
     int port = 5555;
 
-    ClientConsole chat = new ClientConsole(host, port, Channel.DEFAULT_CHANNEL);
+    ClientConsole chat = new ClientConsole(host, port);
     chat.accept();
   }
 

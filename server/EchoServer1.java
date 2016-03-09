@@ -45,12 +45,8 @@ public class EchoServer1 extends AbstractServer
   
   public static ChatIF serverUI;
   
-  //private HashSet<String> usernames;
   private HashMap<String, String> usernamePasswords;
   private HashMap<String, Boolean> loggedIn;
-  private HashSet<Channel> channels;
-  private HashMap<String, String> usernameChannels;
-  private Channel globalChannel;
   
   //added:
   private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
@@ -66,115 +62,69 @@ public class EchoServer1 extends AbstractServer
   public EchoServer1(int port)
   {
     super(port);
-    //usernames = new HashSet<String>();
     usernamePasswords = new HashMap<String, String>();
     loggedIn = new HashMap<String, Boolean>();
-    channels = new HashSet<Channel>();
-    usernameChannels = new HashMap<String, String>();
-    createGlobalChannel();
-    
-    
-    //clients = new ArrayList<ConnectionToClient>();//unsure if needed still
-  }
 
-  private void createGlobalChannel() {
-	  globalChannel = new Channel("global");
-	  channels.add(globalChannel);
+    //clients = new ArrayList<ConnectionToClient>();//unsure if needed still
   }
 
 //Instance methods ************************************************
   
-  public void sendToAllClients(Object msg)
-  {	 
-	  
-	// Checks the username of the person who sent the message
-	// Checks if this user is in a channel
-	// If they are, then the message only gets sent to people in their channel
-  	  
+  /**
+   * This method name is a bit of a misnomer. It only sends messages to the people who are
+   * in your channel. It still sends server messages to everyone. 
+   */
+  public void sendToAllClients(Object msg) {	
+
+	// For the future, don't let usernames have carrots!
 	int indexOfCarrot = msg.toString().indexOf(">");
 	String username = msg.toString().substring(0, indexOfCarrot);
 	
 	// If it's a server message, or if the user is not in a channel, everyone gets it 
-		
+	Thread[] clientThreadList = getClientConnections();
+	
 	if (username.equals("SERVER MSG")){
-		Thread[] clientThreadList = getClientConnections();
 	    for (int i=0; i<clientThreadList.length; i++){
 	      try {
 	         ((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
 	      } catch (Exception ex) {}
 	    }
-	} else {
-		String usersChannelName = usernameChannels.get(username);
-		Channel c = getChannelByName(usersChannelName);
-		c.sendToMembers(msg, this);
 	}
-  }
-
-  public void changeUserChannel(String username, String channel){
-	  
-	  if (channelExists(channel)){
-		  
-		  ConnectionToClient connectionToClient = getConnectionToClientByUsername(username);
-		  connectionToClient.setInfo("channelName", channel);
-		  
-		  Channel c = getChannelByName(channel);
-		  
-		  // Desperate attempt
-		  removeUserFromAllChannels(username);
-		  usernameChannels.remove(username);
-		  		  
-		  usernameChannels.put(username, channel);
-		  c.addUser(username);
-	  } else {
-		  // Don't know what to do here...It will silently fail I guess
-	  }
-  }
-  
-  private void removeUserFromAllChannels(String username) {
-	for (Channel c : channels){
-		if (c.containsUser(username)){
-			c.removeUser(username);
-		}
+	
+	// Otherwise only people in the same channel as the person who sent it receive the message
+	else 
+	{
+		String sendersChannel = "";
+		
+		// get the senders channel
+		for (int i=0; i<clientThreadList.length; i++){
+			if (((ConnectionToClient)clientThreadList[i]).getInfo("id").equals(username)){				
+				sendersChannel = (String) ((ConnectionToClient)clientThreadList[i]).getInfo("channel");
+				break;
+			}
+	    }
+		
+		// send the message to everyone in the channel
+		for (int i=0; i<clientThreadList.length; i++){
+			
+			if (((ConnectionToClient)clientThreadList[i]).getInfo("channel").equals(sendersChannel)){
+				try {
+			       ((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
+			    } catch (Exception ex) {}
+			}
+	    }
 	}
-  }
-
-/**
-   * @param channelName
-   * @returns a channel, or null
-   */
-  public Channel getChannelByName(String channelName) {
-	  for (Channel c : channels) {
-		  if (c.name.equals(channelName)){
-			  return c;
-		  }
-	  }
-	  return null;
   }
   
   public ArrayList<ConnectionToClient> getAllClients(){
 	  return clients;
   }
   
-  public HashMap<String, String> getUsernameChannels(){
-	  return usernameChannels;
-  }
-  
-  public boolean channelExists(String channelName){
-	  return channels.contains(getChannelByName(channelName));
-  }
-  
-  public void createChannel(String channelName) {
-	Channel c = new Channel(channelName);
-	channels.add(c);
-  }
-  
   public boolean usernameExists(String username){
-	  System.out.println("anything");
 	  return usernamePasswords.containsKey(username);
   }
   
   public void addUsernameWithPassword(String username, String password){
-	  //usernames.add(username);
 	  usernamePasswords.put(username, password);
   }
   
@@ -183,7 +133,6 @@ public class EchoServer1 extends AbstractServer
   }
   
   public boolean userLoggedIn(String username){
-//	  return loggedIn.get(username) && usernames.contains(username);
 	  return loggedIn.get(username) && usernamePasswords.containsKey(username);
   }
   
@@ -215,11 +164,6 @@ public class EchoServer1 extends AbstractServer
    * @param client The connection from which the message originated.
    */
   public void handleMessageFromClient(Object msg, ConnectionToClient connectionToClient){
-//    ServerMessageHandler handler = (ServerMessageHandler) msg;
-//    handler.setServer(this);
-//    handler.setConnectionToClient(client);
-//    handler.handleMessage();
-	    	  
 	String message = msg.toString();
 	  
 	if(message.charAt(0) != '#'){
@@ -272,7 +216,6 @@ public class EchoServer1 extends AbstractServer
    */
   @Override
   protected void clientConnected(ConnectionToClient client){
-	  // This must be getting called before ServerLoginHandler.handleMessage()
 	  serverUI().display(client.getInfo("id") + " has connected");
   }
   
@@ -382,8 +325,6 @@ public class EchoServer1 extends AbstractServer
 	  }
 	  catch(Exception ex)
 	  {
-	      //clientUI().display("\nNo such command " + commandStr + "\nNo action taken.");
-		  System.out.println("Error In EchoServer");
 		  try {
 			connectionToClient.sendToClient("\nNo such command " + commandStr + "\nNo action taken.");
 		} catch (IOException e) {}
@@ -391,8 +332,6 @@ public class EchoServer1 extends AbstractServer
 		  
   }
 
-
   //Class methods ***************************************************
-
 }
 
