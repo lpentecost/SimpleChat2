@@ -1,15 +1,12 @@
 package common;
 
 import java.io.IOException;
-
 import ocsf.server.ConnectionToClient;
 import server.EchoServer1;
 
 public class ServerLogoffHandler extends ServerMessageHandler{
-
-	private String myId;
 	
-	public ServerLogoffHandler(){}
+	public ServerLogoffHandler(String id){}
 	
 	@Override
 	public void handleMessage() {

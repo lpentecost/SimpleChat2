@@ -17,7 +17,8 @@ public class ServerGetClientListMessageHandler extends ServerMessageFindHandler 
 	@Override
 	public void handleMessage() {
 		// TODO Auto-generated method stub
-		clients = getServer().getAllClients();
+		//clients = getServer().getAllClients(); // this method is getting deleted
+		
 		ConnectionToClient askingClient = findClient((String) getClient().getInfo("id"));
 		for (int i = 0; i < clients.size(); i++) {
 			allClientsString += clients.get(i).getInfo("id") + " ";

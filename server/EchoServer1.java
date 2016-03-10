@@ -47,9 +47,10 @@ public class EchoServer1 extends AbstractServer
   
   private HashMap<String, String> usernamePasswords;
   private HashMap<String, Boolean> loggedIn;
+  private HashSet<String> channels;
   
   //added:
-  private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
+  //private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
   //----
 
   //Constructors ****************************************************
@@ -64,6 +65,7 @@ public class EchoServer1 extends AbstractServer
     super(port);
     usernamePasswords = new HashMap<String, String>();
     loggedIn = new HashMap<String, Boolean>();
+    channels = new HashSet<String>();
 
     //clients = new ArrayList<ConnectionToClient>();//unsure if needed still
   }
@@ -116,10 +118,10 @@ public class EchoServer1 extends AbstractServer
 	}
   }
   
-  public ArrayList<ConnectionToClient> getAllClients(){
-	  return clients;
-  }
-  
+//  public ArrayList<ConnectionToClient> getAllClients(){
+//	  return clients;
+//  }
+//  
   public boolean usernameExists(String username){
 	  return usernamePasswords.containsKey(username);
   }
@@ -326,10 +328,19 @@ public class EchoServer1 extends AbstractServer
 	  catch(Exception ex)
 	  {
 		  try {
+			System.out.println("Server problem...");
 			connectionToClient.sendToClient("\nNo such command " + commandStr + "\nNo action taken.");
 		} catch (IOException e) {}
 	  }
 		  
+  }
+
+  public HashSet<String> getChannels() {
+	  return channels;
+  }
+
+  public void addToListOfChannels(String channelName) {
+	  channels.add(channelName);
   }
 
   //Class methods ***************************************************
