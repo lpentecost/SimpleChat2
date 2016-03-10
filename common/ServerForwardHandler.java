@@ -3,33 +3,31 @@ import java.io.IOException;
 
 import client.*;
 import ocsf.server.*;
+import server.EchoServer1;
 
 //Alex Prugh
 
-public class ServerForwardHandler extends ServerMessageFindHandler {
-	private String client2id;
-	private String message;
-	private ConnectionToClient connect;
-	
-	public ServerForwardHandler(String id) { //no message from client forwarded
-		client2id = id;
-		System.out.println(client2id);
-	}
-	
-	public ServerForwardHandler(String str, String id) {
-		message = str;
-		client2id = id;
+public class ServerForwardHandler extends ServerMessageHandler {
+	private String receivingClient;
+	private String forwardedMessage;
+	private ConnectionToClient receivingClientConnection;
+
+	public ServerForwardHandler(String client, String message) {		
+		receivingClient = client;
+		forwardedMessage = message;
 	}
 	
 	@Override
-	public void handleMessage() {
-		// TODO Auto-generated method stub
-		connect = findClient(client2id);
+	public void handleMessage() {	
+		
+		EchoServer1 server = getServer();
+		ConnectionToClient c = getClient();
+		String cName = (String) c.getInfo("id"); 
+		
+		receivingClientConnection = server.getConnectionToClientByNname(receivingClient);
 		try {
-			connect.sendToClient(message);
+			receivingClientConnection.sendToClient("Forwarded from  " + cName + "> " + forwardedMessage);
 		}
-		catch (IOException ex) {
-			getServer().sendToAllClients("FORWARD DID NOT WORK"); //delete later
-		}
+		catch (IOException ex) {}
 	}
 }

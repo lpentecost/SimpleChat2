@@ -183,7 +183,7 @@ public class EchoServer1 extends AbstractServer
 	}
   }
   
-  public ConnectionToClient getConnectionToClientByUsername(String username){
+  public ConnectionToClient getConnectionToClientByNname(String username){
 	Thread[] clientThreadList = getClientConnections();
 		
 	for (int i=0; i<clientThreadList.length; i++){
