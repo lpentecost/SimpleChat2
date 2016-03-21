@@ -24,9 +24,9 @@ public class ServerForwardHandler extends ServerMessageHandler {
 		ConnectionToClient c = getClient();
 		String cName = (String) c.getInfo("id"); 
 		
-		receivingClientConnection = server.getConnectionToClientByNname(receivingClient);
+		receivingClientConnection = server.getConnectionToClientByName(receivingClient);
 		try {
-			receivingClientConnection.sendToClient("Forwarded from  " + cName + "> " + forwardedMessage);
+			receivingClientConnection.sendToClient("FORWARDED MESSAGE (" + cName + ")> " + forwardedMessage);
 		}
 		catch (IOException ex) {}
 	}

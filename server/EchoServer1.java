@@ -49,6 +49,10 @@ public class EchoServer1 extends AbstractServer
   private HashMap<String, Boolean> loggedIn;
   private HashSet<String> channels;
   
+  // PersonBeingMonitored, PersonReceivingMonitorMessages
+  private HashMap<String, String> monitors;
+  
+  
   //added:
   //private ArrayList<ConnectionToClient> clients; //(unsure if needed for prugh's unused channel component)
   //----
@@ -76,16 +80,19 @@ public class EchoServer1 extends AbstractServer
    * This method name is a bit of a misnomer. It only sends messages to the people who are
    * in your channel. It still sends server messages to everyone. 
    */
+  
   public void sendToAllClients(Object msg) {	
 
 	// For the future, don't let usernames have carrots!
+	  
 	int indexOfCarrot = msg.toString().indexOf(">");
 	String username = msg.toString().substring(0, indexOfCarrot);
 	
 	// If it's a server message, or if the user is not in a channel, everyone gets it 
 	Thread[] clientThreadList = getClientConnections();
 	
-	if (username.equals("SERVER MSG")){
+	if (username.equals("SERVER MSG"))
+	{
 	    for (int i=0; i<clientThreadList.length; i++){
 	      try {
 	         ((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
@@ -111,17 +118,29 @@ public class EchoServer1 extends AbstractServer
 			
 			if (((ConnectionToClient)clientThreadList[i]).getInfo("channel").equals(sendersChannel)){
 				try {
-			       ((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
+					
+					// if this client has a monitor(s), send the message to the monitor(s) instead
+					ConnectionToClient c = (ConnectionToClient)clientThreadList[i];
+					
+					if (c.getMonitorList().size() > 0){
+						
+						System.out.println("(EchoServer1.sendToAllClients) " + c.getInfo("id") + " has a monitor");
+						
+						for (String receiverName : c.getMonitorList()){
+							ConnectionToClient receiver = getConnectionToClientByName(receiverName);
+							receiver.sendToClient("(Forwarded message to " + c.getInfo("id") + ") "+ msg);
+						}
+						
+					} else {
+						((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
+					}
+					       
 			    } catch (Exception ex) {}
 			}
 	    }
 	}
   }
   
-//  public ArrayList<ConnectionToClient> getAllClients(){
-//	  return clients;
-//  }
-//  
   public boolean usernameExists(String username){
 	  return usernamePasswords.containsKey(username);
   }
@@ -183,7 +202,7 @@ public class EchoServer1 extends AbstractServer
 	}
   }
   
-  public ConnectionToClient getConnectionToClientByNname(String username){
+  public ConnectionToClient getConnectionToClientByName(String username){
 	Thread[] clientThreadList = getClientConnections();
 		
 	for (int i=0; i<clientThreadList.length; i++){
@@ -342,6 +361,19 @@ public class EchoServer1 extends AbstractServer
   public void addToListOfChannels(String channelName) {
 	  channels.add(channelName);
   }
+  
+  public HashMap<String, String> getMonitors(){
+	  return monitors;
+  }
+  
+  public void addToMonitors(String personBeingMonitored, String personReceivingMonitorMessages){
+	  monitors.put(personBeingMonitored, personReceivingMonitorMessages);
+  }
+  
+  public void removeFromMonitors(String personBeingMonitored, String personReceivingMonitorMessages){
+	  monitors.remove(personBeingMonitored);
+  }
+  
 
   //Class methods ***************************************************
 }
