@@ -15,7 +15,6 @@ public class ServerCreatechannelHandler extends ServerMessageHandler{
 	@Override
 	public void handleMessage() {
 		EchoServer1 server = getServer();
-		//server.createChannel(channelName);
 		
 		if (!server.getChannels().contains(channelName)){
 			try {

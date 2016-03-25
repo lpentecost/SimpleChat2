@@ -31,6 +31,5 @@ public class ServerLeaveHandler extends ServerMessageHandler{
 				System.out.println("2");
 			}
 		}
-		
 	}
 }

@@ -90,30 +90,17 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
                     + " Terminating client.");
           System.exit(1);
         }
-        //added from prugh
-        //display("connected to " + host + "-" + port);
-        //-------
     }
 
     public void actionPerformed(ActionEvent evt) {
         String message = textField.getText();
-        //added
-        if(message.contains("#monitor") ){
-            textArea.setForeground(Color.red);
-        }
-        else if (message.contains("#stopmonitor")){
-         textArea.setForeground(Color.BLACK);
-        }//-----------
-        
         client.handleMessageFromClientUI(message);
         textField.setText("");
     }
     
     public void display(String message)
     {
-        //added:
-        System.out.println(message);//unsure if this is a leftover debugging thing from prugh
-        //-----
+        System.out.println(message);
         textArea.append("> " + message + newline);    	
         //Make sure the new text is visible, even if there
         //was a selection in the text area.
@@ -139,36 +126,9 @@ public class ClientGUI extends JPanel implements ActionListener, ChatIF {
     }
 
     public static void main(String[] args) {
-    	final String host = "localhost";//changed to be final (unsure if this necessary or has purpose or breaks things)
-        int port = DEFAULT_PORT;//changed from hard-coded 5555 to DEFAULT_PORT        
-        
-        
-        //added
-//        String idIn = "";
-//        final String id;
-//        try{//this part might have to work differently in general depending on how mike's channel implementation works.
-//            idIn = args[0];
-//        }
-//        catch(ArrayIndexOutOfBoundsException e){
-//            System.out.println("No id provided, can't login.");
-//            System.exit(-1);
-//        }
-//        
-//        try{
-//            port = Integer.parseInt(args[1]);
-//        } catch(ArrayIndexOutOfBoundsException e){
-//            System.out.println("Default port used.");
-//            port = DEFAULT_PORT;
-//        } catch(NumberFormatException e){
-//            System.out.println("Port not a number, exiting");
-//            System.exit(-1);
-//        }
-        final int port_final = port;//moved down here for prugh's code
-        //id = idIn;
-        //------
-       
-    	//Schedule a job for the event dispatch thread:
-        //creating and showing this application's GUI.
+    	final String host = "localhost";
+        int port = DEFAULT_PORT;      
+        final int port_final = port;
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI(host, port_final);

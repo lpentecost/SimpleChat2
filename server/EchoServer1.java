@@ -7,18 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-
-import client.ChatClient1;
-import client.ClientCommand;
 import common.*;
-
-//added from Prugh's code, seems unnecessary:
-//import java.io.*;
-//import client.ChatClient1;
-//import client.ClientCommand;
-//-----
 
 /**
  *  This class modifies EchoServer to complete to begin Chat phase 2.
@@ -84,7 +73,6 @@ public class EchoServer1 extends AbstractServer
   public void sendToAllClients(Object msg) {	
 
 	// For the future, don't let usernames have carrots!
-	  
 	int indexOfCarrot = msg.toString().indexOf(">");
 	String username = msg.toString().substring(0, indexOfCarrot);
 	

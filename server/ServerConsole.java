@@ -48,14 +48,13 @@ public class ServerConsole implements ChatIF{
 	}
 	
 	public static void main(String[] args){
-		// When a ServerConsole is created, create an EchoServer!
 		
-	    int port; //Port to listen on
+	    int port;
 	    
 	    try{
-	      port = Integer.parseInt(args[0]); //Get port from command line
+	      port = Integer.parseInt(args[0]);
 	    } catch (Throwable t) {
-	      port = DEFAULT_PORT; //Set port to 5555
+	      port = DEFAULT_PORT;
 	    }
 	    
 	    EchoServer1 sv = new EchoServer1(port);

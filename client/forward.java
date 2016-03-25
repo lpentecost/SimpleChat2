@@ -6,8 +6,6 @@ import common.*;
 //Alex Prugh
 
 public class forward extends ClientCommand {
-	private String toClient;
-	private String message;
 	
 	public forward(String str, ChatClient1 client) {
 		super(str, client);

@@ -10,9 +10,7 @@ public class joinchannel extends ClientCommand{
 	}
 
 	@Override
-	public void doCommand() {
-		String[] params = getStr().split(" ");
-				
+	public void doCommand() {				
 		try {
 			getClient().sendToServer("#joinchannel " + getStr());
 		} catch (IOException e1) {}

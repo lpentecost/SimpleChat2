@@ -52,13 +52,9 @@ public class ChatClient1 extends AbstractClient
    */
 
   public ChatClient1(String host, int port, ChatIF clientUI) throws IOException {
-	  
-    super(host, port); //Call the superclass constructor
+    super(host, port);
     myClientUI = clientUI;
-    //blocked = new ArrayList<String>();
-    //blockedMe = new ArrayList<String>();
     monitor = new ArrayList<String>();
-    
     displayGreeting();
   }
 
@@ -91,63 +87,8 @@ public class ChatClient1 extends AbstractClient
    */
   public void handleMessageFromServer(Object msg)
   {
-	  
 	  clientUI().display(msg.toString()); 
-	  
-//	  String clientName;
-//	  if (msg instanceof ArrayList) { // handling the case where want to add to the blockedMe list
-//		  getBlockedMeList().addAll((ArrayList) msg);
-//	  }
-//	  else {		  
-//		  //finding the indicies of the substring in which there will be there will be the client's name
-//		  final int BEGINNINGIDIDX = 0;
-//		  		  
-//		  int endingIdIdx = ((String) msg).indexOf(">"); //finding the second carrot
-//		  
-//		  if (endingIdIdx == -1){
-//			  endingIdIdx = msg.toString().length() - 1;
-//		  }
-//		  
-//		  clientName = ((String) msg).substring(BEGINNINGIDIDX, endingIdIdx);
-//		  		  
-//		  // the message will not show if the client has been blocked
-//		  if (!(getBlockedList().contains(clientName))){
-//			  clientUI().display(msg.toString()); 
-//		  }
-//	  }
-//	  
-//	  //added:
-//	  if (getMonitor().size() > 0) {
-//		  for (int i = 0; i < this.getMonitor().size(); i ++) {
-//		     ServerForwardHandler forwardMess = new ServerForwardHandler("MONITOR: " + getId() + " received this message: " + (String) msg, this.getMonitor().get(i));
-//		     try
-//		     {
-//		      sendToServer(forwardMess);
-//		     }
-//		     catch(IOException e)
-//		     {
-//		      clientUI().display("Monitor did not work.");
-//		      quit();
-//		     }
-//		    }
-//	   }
   }
-  
-//  public void blockedMe(String clientId) {
-//	  blockedMe.add(clientId);
-//  }
-//  
-//  public ArrayList<String> getBlockedMeList() {
-//	  return blockedMe;
-//  }
-//  
-//  public void block(String clientId){
-//	  blocked.add(clientId);
-//  }
-//  
-//  public ArrayList<String> getBlockedList() {
-//	  return blocked;
-//  }
   
   public void setMonitor(String clientId) {
    monitor.add(clientId);
@@ -222,8 +163,6 @@ public class ChatClient1 extends AbstractClient
       message = message.substring(indexBlank+1);
     }
     
-    //System.out.println("commandStr: " + commandStr);
-
     try
     {   
       Class[] param = {String.class, ChatClient1.class};
@@ -261,14 +200,4 @@ public class ChatClient1 extends AbstractClient
     catch(IOException e) {}
     System.exit(0); // completely ends the client, does not allow him to come back
   }
-  
-  /*prugh had this additional method, unsure if necessary yet
-  public void logoff() throws IOException{
-    try{
-     closeConnection(); // kills everything about the connection!
-    } catch(IOException e) {}
-  }
-  
-  */
-
 }

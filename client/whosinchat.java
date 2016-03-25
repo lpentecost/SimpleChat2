@@ -1,8 +1,6 @@
 package client;
 import java.io.IOException;
 
-//import common.ServerGetClientListMessageHandler;
-
 public class whosinchat extends ClientCommand {
 	public whosinchat(String str, ChatClient1 client)
 	{
@@ -15,5 +13,4 @@ public class whosinchat extends ClientCommand {
 			getClient().sendToServer("#whosinchat " + getStr());
 		} catch (IOException e) {}
 	}
-
 }

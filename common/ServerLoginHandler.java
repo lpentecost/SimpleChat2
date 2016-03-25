@@ -29,9 +29,7 @@ public class ServerLoginHandler extends ServerMessageHandler
    * Now supports passwords
    */
   public void handleMessage(){
-	   	 
-	System.out.println("login message handler method called");
-	  
+	   	 	  
 	// Assume we are connected! And we'll disconnect if there's a mistake
 	// It's not particularly graceful. It makes you start another console,
 	// and it writes "null has disconnected" to the server console. 

@@ -17,5 +17,4 @@ public class gethost extends ClientCommand{
 	public void doCommand() {
 		System.out.println("Your host is " + getClient().getHost());
 	}
-
 }
