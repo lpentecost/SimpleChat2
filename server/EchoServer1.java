@@ -141,6 +141,10 @@ public class EchoServer1 extends AbstractServer
 	  return usernamePasswords.get(username).equals(password);
   }
   
+  public HashMap<String, String> getUsernamePasswords(){
+	  return usernamePasswords;
+  }
+  
   public boolean userLoggedIn(String username){
 	  return loggedIn.get(username) && usernamePasswords.containsKey(username);
   }

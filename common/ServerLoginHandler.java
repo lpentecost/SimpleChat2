@@ -41,8 +41,7 @@ public class ServerLoginHandler extends ServerMessageHandler
 	if (usernameExists){
 		
 		// Successful login
-		if (server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){				
-			
+		if (server.passwordMatchesUsername(myId, password) && !server.userLoggedIn(myId)){				
 			
 			server.setUsernameLoggedIn(myId);
 			connectionToClient.setInfo("id", myId);				
@@ -52,32 +51,17 @@ public class ServerLoginHandler extends ServerMessageHandler
 			server.sendToAllClients("SERVER MSG> " + myId + " has logged in");
 			// does NOT close the connection
 			
-		// Password matches, but the user is logged in. Bad case
-		} else if (server.passwordMatchesUsername(myId, password) /*&& server.userLoggedIn(myId)*/){
-									
-			server.serverUI().display("Someone attempted to log in as " + myId + " while " + myId + " was logged in.");
-			try { connectionToClient.sendToClient("This account is in use."); } catch (IOException e) {}
-			
-			try {
+		// Classic wrong password error
+		} else if (!server.passwordMatchesUsername(myId, password)){
+			try { 
+				connectionToClient.sendToClient("Incorrect password...closing client"); 
 				connectionToClient.close();
 			} catch (IOException e) {}
 
-			
-		// Classic wrong password error
-		} else if (!server.passwordMatchesUsername(myId, password) /*&& !server.userLoggedIn(myId)*/){
-			
-			try { connectionToClient.sendToClient("Incorrect password"); } catch (IOException e) {}
-			
-			try {
-				connectionToClient.close();
-			} catch (IOException e) {}
-			
-		// Wrong password. Someone else is logged in as this name. Potential break in attempt
-		} else if (!server.passwordMatchesUsername(myId, password) /*&& server.userLoggedIn(myId)*/){
-						
-			try { connectionToClient.sendToClient("Incorrect password"); } catch (IOException e) {}
-			
-			try {
+		// User already logged in somewhere else 
+		} else if (server.userLoggedIn(myId)){
+			try { 
+				connectionToClient.sendToClient("This name is already in use...closing client"); 
 				connectionToClient.close();
 			} catch (IOException e) {}
 		}

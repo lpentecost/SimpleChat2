@@ -28,6 +28,11 @@ public class ServerStopmonitorHandler extends ServerMessageHandler{
 		
 		while (i.hasNext()) {
 		   String s = i.next();
+		   
+		   try {
+			server.getConnectionToClientByName(s).sendToClient("You are no longer monitoring " + (String)c.getInfo("id"));
+		   } catch (IOException e) {}
+		   
 		   server.getConnectionToClientByName(s).removeFromMonitorList((String)c.getInfo("id"));
 		   i.remove();
 		}

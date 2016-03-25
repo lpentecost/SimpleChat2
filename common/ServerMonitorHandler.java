@@ -21,6 +21,27 @@ public class ServerMonitorHandler extends ServerMessageHandler{
 		EchoServer1 server = getServer();
 		ConnectionToClient c = getClient();
 		
+		if (c.getInfo("id").equals(idToMonitor)){
+			try {
+				getClient().sendToClient("You cannot monitor yourself");
+			} catch (IOException e) {}
+			return;
+		}
+		
+		if(c.getMonitorList().contains(idToMonitor)){
+			try {
+				getClient().sendToClient("You are already being monitored by " + idToMonitor);
+			} catch (IOException e) {}
+			return;
+		}
+		
+		if (!server.getUsernamePasswords().containsKey(idToMonitor)){
+			try {
+				getClient().sendToClient("The username " + idToMonitor + " does not exist");
+			} catch (IOException e) {}
+			return;
+		}
+		
 		ConnectionToClient monitoringUser = server.getConnectionToClientByName(idToMonitor);
 		c.addToMonitorList((String)monitoringUser.getInfo("id"));
 		

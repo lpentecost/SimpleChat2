@@ -5,6 +5,8 @@ import ocsf.server.ConnectionToClient;
 import server.EchoServer1;
 
 public class ServerWhoblocksmeHandler extends ServerMessageHandler{
+
+	public ServerWhoblocksmeHandler(String id){}
 	
 	@Override
 	public void handleMessage() {
@@ -14,6 +16,7 @@ public class ServerWhoblocksmeHandler extends ServerMessageHandler{
 		String actorName = (String) connectionToClient.getInfo("id");
 		
 		String myBlockers = "Who blocks me: ";
+		int initialLength = myBlockers.length();
 		
 		Thread[] clientThreadList = server.getClientConnections();
 		
@@ -25,6 +28,10 @@ public class ServerWhoblocksmeHandler extends ServerMessageHandler{
 				myBlockers += c.getInfo("id") + ", ";
 			}
 	    }
+		
+		if (myBlockers.length() == initialLength){
+			myBlockers += "No one!   ";
+		}
 				
 		myBlockers = myBlockers.substring(0, myBlockers.length() - 2);
 		

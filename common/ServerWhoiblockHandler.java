@@ -18,6 +18,10 @@ public class ServerWhoiblockHandler extends ServerMessageHandler{
 			stringToSend += s + ", ";
 		}
 		
+		if (connectionToClient.getBlockedList().isEmpty()) {
+			stringToSend += "No one!   ";
+		}
+		
 		stringToSend = stringToSend.substring(0, stringToSend.length() - 2);
 		
 		try {

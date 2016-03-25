@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ocsf.server.*;
-// This class helps with the #whoblockme command
+import server.EchoServer1;
 
 public class ServerBlockHandler extends ServerMessageHandler{
 
@@ -16,6 +16,30 @@ public class ServerBlockHandler extends ServerMessageHandler{
 	
 	@Override
 	public void handleMessage() {
+		
+		ConnectionToClient myConnection = getClient();
+		EchoServer1 server = getServer();
+		
+		if (myConnection.getInfo("id").equals(idToBlock)){
+			try {
+				getClient().sendToClient("You cannot block yourself");
+			} catch (IOException e) {}
+			return;
+		}
+		
+		if(myConnection.getBlockedList().contains(idToBlock)){
+			try {
+				getClient().sendToClient("You have already blocked " + idToBlock);
+			} catch (IOException e) {}
+			return;
+		}
+		
+		if (!server.getUsernamePasswords().containsKey(idToBlock)){
+			try {
+				getClient().sendToClient("The username " + idToBlock + " does not exist");
+			} catch (IOException e) {}
+			return;
+		}
 		
 		getClient().addToBlockedList(idToBlock);
 		
