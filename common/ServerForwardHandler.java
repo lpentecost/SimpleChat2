@@ -25,9 +25,11 @@ public class ServerForwardHandler extends ServerMessageHandler {
 		String cName = (String) c.getInfo("id"); 
 		
 		receivingClientConnection = server.getConnectionToClientByName(receivingClient);
-		try {
-			receivingClientConnection.sendToClient("FORWARDED MESSAGE (" + cName + ")> " + forwardedMessage);
+		if(!receivingClientConnection.getBlockedList().contains(getClient().getInfo("id"))) { // only forward if the user hasn't blocked you
+			try {
+				receivingClientConnection.sendToClient("FORWARDED MESSAGE (" + cName + ")> " + forwardedMessage);
+			}
+			catch (IOException ex) {}
 		}
-		catch (IOException ex) {}
 	}
 }
