@@ -25,9 +25,23 @@ public class ServerForwardHandler extends ServerMessageHandler {
 		String cName = (String) c.getInfo("id"); 
 		
 		receivingClientConnection = server.getConnectionToClientByName(receivingClient);
-		if(!receivingClientConnection.getBlockedList().contains(getClient().getInfo("id"))) { // only forward if the user hasn't blocked you
+		if (!server.getUsernamePasswords().containsKey(receivingClient)){
+			try {
+				getClient().sendToClient("The username " + receivingClient + " does not exist");
+			} catch (IOException e) {}
+			return;
+		}
+		
+		else if(!receivingClientConnection.getBlockedList().contains(getClient().getInfo("id"))) {
+		
 			try {
 				receivingClientConnection.sendToClient("FORWARDED MESSAGE (" + cName + ")> " + forwardedMessage);
+			}
+			catch (IOException ex) {}
+		}
+		else {
+			try {
+				c.sendToClient("ERROR: did not forward message.");
 			}
 			catch (IOException ex) {}
 		}
