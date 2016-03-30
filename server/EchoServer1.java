@@ -111,7 +111,7 @@ public class EchoServer1 extends AbstractServer
 					ConnectionToClient c = (ConnectionToClient)clientThreadList[i];
 					
 					if (c.getMonitorList().size() > 0){
-						
+						((ConnectionToClient)clientThreadList[i]).sendToClient(msg);
 						System.out.println("(EchoServer1.sendToAllClients) " + c.getInfo("id") + " has a monitor");
 						
 						for (String receiverName : c.getMonitorList()){
