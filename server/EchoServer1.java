@@ -116,7 +116,7 @@ public class EchoServer1 extends AbstractServer
 						
 						for (String receiverName : c.getMonitorList()){
 							ConnectionToClient receiver = getConnectionToClientByName(receiverName);
-							receiver.sendToClient("(Forwarded message to " + c.getInfo("id") + ") "+ msg);
+							receiver.sendToClient("(Monitor message to " + c.getInfo("id") + ") "+ msg);
 						}
 						
 					} else {
