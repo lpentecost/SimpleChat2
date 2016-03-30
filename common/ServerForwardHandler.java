@@ -1,5 +1,6 @@
 package common;
 import java.io.IOException;
+import java.util.HashSet;
 
 import client.*;
 import ocsf.server.*;
@@ -22,9 +23,11 @@ public class ServerForwardHandler extends ServerMessageHandler {
 		
 		EchoServer1 server = getServer();
 		ConnectionToClient c = getClient();
-		String cName = (String) c.getInfo("id"); 
+		String cName = (String) c.getInfo("id");
 		
 		receivingClientConnection = server.getConnectionToClientByName(receivingClient);
+		String receivingName = (String) receivingClientConnection.getInfo("id");
+		
 		if (!server.getUsernamePasswords().containsKey(receivingClient)){
 			try {
 				getClient().sendToClient("The username " + receivingClient + " does not exist");
@@ -38,6 +41,18 @@ public class ServerForwardHandler extends ServerMessageHandler {
 				receivingClientConnection.sendToClient("FORWARDED MESSAGE (" + cName + ")> " + forwardedMessage);
 			}
 			catch (IOException ex) {}
+			HashSet<String> monitorList = receivingClientConnection.getMonitorList();
+			if (monitorList.size()!= 0) {
+				for (String receivingClient: monitorList) {
+					ConnectionToClient receiving = getServer().getConnectionToClientByName(receivingClient);
+					try {
+						receiving.sendToClient("(Monitor message to " + receivingName + ": FORWARDED MESSAGE (" + cName + ")> " + forwardedMessage);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 		else {
 			try {
