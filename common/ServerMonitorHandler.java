@@ -55,7 +55,7 @@ public class ServerMonitorHandler extends ServerMessageHandler{
 		} catch (IOException e) {}
 		
 		try {
-			monitoringUser.sendToClient("You are now monitoring " + c.getInfo("id") + ". Use #break <username> to stop monitoring this user");
+			monitoringUser.sendToClient("You are now monitoring " + c.getInfo("id") + ". Use #breakmonitor <username> to stop monitoring this user");
 		} catch (IOException e) {}
 	}
 }
