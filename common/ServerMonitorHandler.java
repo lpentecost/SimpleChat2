@@ -43,8 +43,13 @@ public class ServerMonitorHandler extends ServerMessageHandler{
 		}
 		
 		ConnectionToClient monitoringUser = server.getConnectionToClientByName(idToMonitor);
+		if (monitoringUser.getBlockedList().contains(getClient().getInfo("id"))) { //preventing monitor to someone you blocked
+			try {
+				getClient().sendToClient("Client cannot monitor you.");
+			} catch (IOException e) {}
+			return;
+		}
 		c.addToMonitorList((String)monitoringUser.getInfo("id"));
-		
 		try {
 			c.sendToClient("You are now being monitored by " + idToMonitor);
 		} catch (IOException e) {}
